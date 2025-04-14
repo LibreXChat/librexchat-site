@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LibreXChat — честная игра для всех</title>
+  <title>LibreXChat</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
   <script>
     const translations = {
@@ -23,7 +23,15 @@
         <br><br>🎉 Присоединяйся и стань частью открытого и свободного мира!`,
         footer: "© 2025 LibreXChat. Проект создан для всех без исключения.",
         rules: "Правила",
-        nav: ["Новости", "Личный кабинет", "Правила", "Скачать"]
+        back: "Назад на главную",
+        nav: ["Новости", "Личный кабинет", "Правила", "Скачать"],
+        ruleItems: [
+          "Нельзя изменять файлы игры — любое вмешательство карается баном.",
+          "Запрещена тематика войны, религии, национальности — карается баном.",
+          "Запрещены оскорбления, публикация личных данных и преследование.",
+          "Оскорбление администрации — карается баном.",
+          "Требования модераторов обязательны к выполнению."
+        ]
       },
       en: {
         title: "LibreXChat — a fair game for everyone",
@@ -41,7 +49,15 @@
         <br><br>🎉 Join us and become part of an open and free world!`,
         footer: "© 2025 LibreXChat. A project created for everyone without exception.",
         rules: "Rules",
-        nav: ["News", "Account", "Rules", "Download"]
+        back: "Back to Main",
+        nav: ["News", "Account", "Rules", "Download"],
+        ruleItems: [
+          "Modifying game files is prohibited — it results in a ban.",
+          "War, religion, and nationality topics are forbidden — ban applied.",
+          "Harassment, personal data posting, and abuse are banned.",
+          "Offending moderators or admins leads to a ban.",
+          "Moderator/admin instructions must be followed."
+        ]
       }
     };
 
@@ -55,11 +71,21 @@
       document.getElementById('whatIs').textContent = t.whatIs;
       document.getElementById('desc').innerHTML = t.description;
       document.getElementById('footerText').textContent = t.footer;
+      document.getElementById('rules-title').textContent = t.rules;
+      document.getElementById('rules-back').textContent = t.back;
+
+      const ruleList = document.getElementById('rules-list');
+      ruleList.innerHTML = '';
+      t.ruleItems.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        ruleList.appendChild(li);
+      });
+
       const navItems = document.querySelectorAll(".nav-item");
       navItems.forEach((el, idx) => {
         el.textContent = t.nav[idx];
       });
-      document.getElementById("rules-title").textContent = t.rules;
     }
 
     function showRules() {
@@ -109,34 +135,14 @@
 
   <main class="max-w-3xl mx-auto px-4 py-8 text-center">
     <h2 class="text-2xl font-semibold mb-4" id="whatIs">Что такое LibreXChat?</h2>
-    <p class="text-lg leading-relaxed" id="desc">
-      LibreXChat — это многопользовательский онлайн-мир, в котором игроки могут общаться, флиртовать, развлекаться и выражать свои желания без ограничений.
-      <br><br>
-      Игра полностью <strong>бесплатна</strong>, без доната, без майнинга и без ограничений по фантазии.
-      <br><br>
-      На нашем сервере ты сможешь:
-      <br>– встретить новых друзей,
-      <br>– создать пару или семью,
-      <br>– завести лёгкие отношения или страстный роман,
-      <br>– устроиться на работу и получать игровую валюту,
-      <br>– посетить вечеринки с реальными диджеями и танцполами,
-      <br>– и просто расслабиться в свободной атмосфере.
-      <br><br>
-      🎉 Присоединяйся и стань частью открытого и свободного мира!
-    </p>
+    <p class="text-lg leading-relaxed" id="desc">Загрузка...</p>
   </main>
 
   <section id="rules" class="max-w-3xl mx-auto px-4 py-8 text-left" style="display:none">
     <h2 class="text-2xl font-semibold mb-4" id="rules-title">Правила</h2>
-    <ul class="list-disc pl-6 space-y-2">
-      <li>Нельзя изменять файлы игры — любое вмешательство карается баном.</li>
-      <li>Запрещена тематика войны, религии, национальности — карается баном.</li>
-      <li>Запрещены оскорбления игроков, публикация личных данных и фото, а также преследование — всё карается баном.</li>
-      <li>Оскорбления в адрес администрации или модераторов — караются баном.</li>
-      <li>Просьбы администраторов и модераторов обязательны к выполнению — несоблюдение влечёт бан.</li>
-    </ul>
+    <ul id="rules-list" class="list-disc pl-6 space-y-2"></ul>
     <div class="text-center mt-6">
-      <button onclick="backToMain()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full">Назад на главную</button>
+      <button onclick="backToMain()" id="rules-back" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full">Назад на главную</button>
     </div>
   </section>
 
@@ -144,6 +150,6 @@
     <span id="footerText">© 2025 LibreXChat. Проект создан для всех без исключения.</span>
   </footer>
 
-  <script>switchLanguage('ru');</script>
+  <script>switchLanguage();</script>
 </body>
 </html>
