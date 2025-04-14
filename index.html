@@ -149,7 +149,26 @@
   <footer class="text-center py-6 text-sm text-gray-400">
     <span id="footerText">© 2025 LibreXChat. Проект создан для всех без исключения.</span>
   </footer>
+<script>
+  const t = translations[currentLang];
+  document.title = t.title;
+  document.getElementById('joinBtn').textContent = t.join;
+  document.getElementById('whatIs').textContent = t.whatIs;
+  document.getElementById('desc').innerHTML = t.description;
+  document.getElementById('footerText').textContent = t.footer;
+  document.getElementById('rules-title').textContent = t.rules;
+  document.getElementById('rules-back').textContent = t.back;
 
-  <script>switchLanguage();</script>
-</body>
-</html>
+  const ruleList = document.getElementById('rules-list');
+  ruleList.innerHTML = '';
+  t.ruleItems.forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = item;
+    ruleList.appendChild(li);
+  });
+
+  const navItems = document.querySelectorAll(".nav-item");
+  navItems.forEach((el, idx) => {
+    el.textContent = t.nav[idx];
+  });
+</script>
