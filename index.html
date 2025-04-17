@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LibreXChat</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="lang.js" defer></script>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+  <nav class="flex justify-between items-center bg-gray-800 px-6 py-4 text-sm">
+    <div class="flex space-x-6">
+      <a href="#" class="nav-item hover:text-blue-400">Новости</a>
+      <a href="account.html" class="nav-item hover:text-blue-400">Личный кабинет</a>
+      <a href="rules.html" class="nav-item hover:text-blue-400">Правила</a>
+      <a href="#" class="nav-item hover:text-blue-400">Скачать</a>
+    </div>
+    <div class="flex items-center space-x-3">
+      <button onclick="switchLanguage()" class="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600">EN / RU</button>
+    </div>
+  </nav>
+
+  <header class="text-center py-10">
+    <h1 class="text-5xl font-bold rainbow-text mb-4">LibreXChat</h1>
+    <a href="https://t.me/librexchat_chat" target="_blank" class="bg-green-500 hover:bg-green-600 text-white py-3 px-6 rounded-full text-xl transition" id="joinBtn">Присоединиться</a>
+    <div class="mt-4 flex justify-center space-x-4">
+      <a href="https://t.me/librexchat_chat" target="_blank"><img src="https://img.icons8.com/ios-filled/30/ffffff/telegram-app.png"/></a>
+      <a href="https://discord.gg/46JVhzvp" target="_blank"><img src="https://img.icons8.com/ios-filled/30/ffffff/discord-logo.png"/></a>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-8 text-center">
+    <h2 class="text-2xl font-semibold mb-4" id="whatIs">Что такое LibreXChat?</h2>
+    <p class="text-lg leading-relaxed" id="desc">Загрузка...</p>
+  </main>
+
+  <footer class="text-center py-6 text-sm text-gray-400">
+    <span id="footerText">© 2025 LibreXChat. Проект создан для всех без исключения.<br>Разработчик <span class="rainbow-text">Intriganka и Лосик</span></span>
+  </footer>
+</body>
+</html>
