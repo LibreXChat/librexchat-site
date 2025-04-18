@@ -1,39 +1,36 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Мой профиль — LibreXChat</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
     body {
-      background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+      background: #0a0a1a;
       color: white;
-      font-family: 'Arial', sans-serif;
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-    .panel {
-      background-color: rgba(255, 255, 255, 0.05);
-      border-radius: 15px;
+    .glow {
+      box-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
+      border: 1px solid #00f0ff;
+      border-radius: 12px;
       padding: 20px;
-      margin-bottom: 20px;
     }
-    .btn {
-      background-color: #6d28d9;
-      padding: 10px 20px;
-      border-radius: 8px;
-      margin: 5px 0;
-      width: 100%;
-      text-align: center;
-      transition: background-color 0.3s;
+    .glow-green {
+      box-shadow: 0 0 10px #00ff88, 0 0 20px #00ff88;
+      border: 1px solid #00ff88;
+      border-radius: 12px;
+      padding: 20px;
     }
-    .btn:hover {
-      background-color: #7c3aed;
-    }
-    .btn-danger {
-      background-color: #dc2626;
-    }
-    .btn-danger:hover {
-      background-color: #ef4444;
+    .glow-red {
+      box-shadow: 0 0 10px #ff4d4d, 0 0 20px #ff4d4d;
+      border: 1px solid #ff4d4d;
+      border-radius: 12px;
+      padding: 20px;
     }
     #infoBox {
       position: fixed;
@@ -48,44 +45,134 @@
       font-size: 14px;
       z-index: 9999;
     }
+    .button {
+      background: #6d28d9;
+      border-radius: 8px;
+      padding: 10px;
+      transition: 0.3s;
+      text-align: center;
+    }
+    .button:hover {
+      background: #7c3aed;
+    }
+    .red-button {
+      background: #dc2626;
+      border-radius: 8px;
+      padding: 10px;
+      transition: 0.3s;
+      text-align: center;
+    }
+    .red-button:hover {
+      background: #ef4444;
+    }
   </style>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 </head>
+<body class="flex flex-col items-center py-10">
 
-<body class="p-6">
+<div id="infoBox"></div>
 
-  <header class="flex justify-between items-center mb-10">
-    <h1 class="text-3xl font-bold">Мой профиль</h1>
-    <nav class="flex gap-4 text-sm">
-      <a href="index.html" class="hover:underline">Главная</a>
-      <a href="rules.html" class="hover:underline">Правила</a>
-      <button onclick="logout()" class="hover:underline text-red-400">Выйти</button>
-    </nav>
-  </header>
+<h1 class="text-4xl font-bold mb-8">Мой профиль</h1>
 
-  <div class="grid md:grid-cols-3 gap-8">
-    <div class="panel">
-      <button onclick="loadProfile()" class="btn">Данные профиля</button>
-      <button onclick="changeEmail()" class="btn">Сменить Email</button>
-      <button onclick="changePassword()" class="btn">Сменить пароль</button>
-      <button onclick="recoverPassword()" class="btn">Восстановление пароля</button>
-      <button onclick="deleteAccount()" class="btn btn-danger">Удалить аккаунт</button>
-    </div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl px-4">
 
-    <div class="panel col-span-2">
-      <h2 class="text-xl font-semibold mb-4">Профиль:</h2>
-      <p><strong>Email:</strong> <span id="profileEmail">Загрузка...</span></p>
-      <p><strong>Дата регистрации:</strong> <span id="profileRegDate">Загрузка...</span></p>
+  <!-- Левая панель -->
+  <div class="flex flex-col space-y-4">
+    <div class="button">Данные профиля</div>
+    <div class="button">Персонажи</div>
+    <div class="button">Мой центр загрузок</div>
+    <div class="button opacity-50 cursor-not-allowed">Фракция</div>
+    <div class="red-button">Удаление профиля</div>
+  </div>
+
+  <!-- Центр -->
+  <div class="glow">
+    <div class="grid grid-cols-2 gap-2">
+      <div>Email:</div><div id="profileEmail">Загрузка...</div>
+      <div>Счёт:</div><div id="profileCoins">0 монет</div>
+      <div>Количество персонажей:</div><div id="profileChars">0 шт.</div>
+      <div>Дата регистрации:</div><div id="profileRegisterDate">Загрузка...</div>
+      <div>Время в игре:</div><div id="profilePlayTime">Загрузка...</div>
     </div>
   </div>
 
-  <!-- Блок уведомлений -->
-  <div id="infoBox"></div>
+  <!-- Правая панель -->
+  <div class="glow-green flex flex-col space-y-4">
+    <button class="button" onclick="changeEmail()">Сменить Email</button>
+    <button class="button" onclick="changePassword()">Сменить пароль</button>
+    <button class="button" onclick="recoveryPassword()">Восстановление</button>
+  </div>
 
-  <!-- Скрипты -->
-  <script src="profile.js"></script>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyBhmuX9aWec4NjxiSZ1FmqBr7LvioyK1rk",
+    authDomain: "librexchat-dba06.firebaseapp.com",
+    projectId: "librexchat-dba06",
+    storageBucket: "librexchat-dba06.appspot.com",
+    messagingSenderId: "48021503169",
+    appId: "1:48021503169:web:fb694c3b1e3416461ae840"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  function showInfo(message) {
+    const infoBox = document.getElementById('infoBox');
+    infoBox.textContent = message;
+    infoBox.style.opacity = '1';
+    setTimeout(() => { infoBox.style.opacity = '0'; }, 3000);
+  }
+
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      document.getElementById('profileEmail').textContent = user.email;
+      document.getElementById('profileCoins').textContent = '86828 монет'; // Здесь потом можно подгружать реальные данные
+      document.getElementById('profileChars').textContent = '1 шт.'; // Или из базы данных
+      const regDate = new Date(user.metadata.creationTime);
+      document.getElementById('profileRegisterDate').textContent = regDate.toLocaleDateString();
+      document.getElementById('profilePlayTime').textContent = '0 д. 18 ч. 52 мин.';
+    } else {
+      showInfo('Вы не авторизованы!');
+      setTimeout(() => { window.location.href = 'login.html'; }, 2000);
+    }
+  });
+
+  function changeEmail() {
+    const newEmail = prompt('Введите новый Email:');
+    if (newEmail) {
+      auth.currentUser.updateEmail(newEmail).then(() => {
+        showInfo('Email успешно обновлен!');
+        document.getElementById('profileEmail').textContent = newEmail;
+      }).catch(error => {
+        showInfo('Ошибка: ' + error.message);
+      });
+    }
+  }
+
+  function changePassword() {
+    const newPassword = prompt('Введите новый пароль:');
+    if (newPassword) {
+      auth.currentUser.updatePassword(newPassword).then(() => {
+        showInfo('Пароль успешно обновлен!');
+      }).catch(error => {
+        showInfo('Ошибка: ' + error.message);
+      });
+    }
+  }
+
+  function recoveryPassword() {
+    const email = prompt('Введите Email для восстановления:');
+    if (email) {
+      auth.sendPasswordResetEmail(email).then(() => {
+        showInfo('Письмо отправлено на ваш Email.');
+      }).catch(error => {
+        showInfo('Ошибка: ' + error.message);
+      });
+    }
+  }
+</script>
+
 </body>
 </html>
