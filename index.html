@@ -32,12 +32,17 @@
       <a href="#" class="nav-item" data-key="nav_news">Новости</a>
       <a href="rules.html" class="nav-item" data-key="nav_rules">Правила</a>
       <a href="#" class="nav-item" data-key="nav_download">Скачать</a>
-      <a href="https://t.me/librexchat_chat" target="_blank" class="nav-item" data-key="join">Присоединиться</a>
-      <a href="https://discord.gg/46JVhzvp" target="_blank"><img src="https://img.icons8.com/ios-filled/20/00ffff/discord-logo.png"/></a>
-      <a href="https://t.me/librexchat_chat" target="_blank"><img src="https://img.icons8.com/ios-filled/20/00ffff/telegram-app.png"/></a>
+
+      <span class="font-bold text-white" data-key="join">Присоединиться</span>
+      <a href="https://discord.gg/46JVhzvp" target="_blank">
+        <img src="https://img.icons8.com/ios-filled/20/00ffff/discord-logo.png"/>
+      </a>
+      <a href="https://t.me/librexchat_chat" target="_blank">
+        <img src="https://img.icons8.com/ios-filled/20/00ffff/telegram-app.png"/>
+      </a>
     </div>
     <div>
-      <a href="account.html" class="nav-item hover:text-blue-400" data-key="nav_account">Личный кабинет</a>
+      <a href="account.html" class="text-lg font-semibold hover:text-blue-400 nav-item" data-key="nav_account">Личный кабинет</a>
     </div>
   </nav>
 
@@ -119,8 +124,8 @@
     }
 
     window.onload = () => {
-      switchLanguage(); // 1 раз переключит
-      switchLanguage(); // и вернёт обратно на русский
+      switchLanguage(); // переключает
+      switchLanguage(); // возвращает на ru
     };
   </script>
 </body>
