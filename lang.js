@@ -1,31 +1,27 @@
 const translations = {
   ru: {
-    news: "Новости",
-    account: "Личный кабинет",
-    rules: "Правила",
-    download: "Скачать",
+    title: "LibreXChat — честная игра для всех",
     whatIs: "Что такое LibreXChat?",
-    description: `LibreXChat — это многопользовательский онлайн-мир, где игроки могут общаться, флиртовать, развлекаться и выражать желания без ограничений...`,
+    description: `LibreXChat — это многопользовательский онлайн-мир...`, // можно оставить как есть
+    footer: "© 2025 LibreXChat. Проект создан для всех без исключения.",
   },
   en: {
-    news: "News",
-    account: "Account",
-    rules: "Rules",
-    download: "Download",
+    title: "LibreXChat — a fair game for everyone",
     whatIs: "What is LibreXChat?",
-    description: `LibreXChat is a multiplayer world where people can chat, flirt, have fun, and express their desires freely...`,
+    description: `LibreXChat is a multiplayer online world...`, // аналогично
+    footer: "© 2025 LibreXChat. A project created for everyone without exception.",
   }
 };
 
 let currentLang = 'ru';
 
-function switchLanguage() {
-  currentLang = currentLang === 'ru' ? 'en' : 'ru';
-  const elements = document.querySelectorAll("[data-key]");
-  elements.forEach(el => {
-    const key = el.getAttribute("data-key");
-    if (translations[currentLang][key]) {
-      el.innerHTML = translations[currentLang][key];
-    }
-  });
+function switchLanguage(lang = null) {
+  if (lang) currentLang = lang;
+  else currentLang = currentLang === 'ru' ? 'en' : 'ru';
+
+  const t = translations[currentLang];
+  document.title = t.title;
+  document.getElementById('whatIs').textContent = t.whatIs;
+  document.getElementById('desc').innerHTML = t.description;
+  document.getElementById('footerText').textContent = t.footer;
 }
