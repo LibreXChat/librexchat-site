@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мой профиль | LibreXChat</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #0a0223;
+      color: white;
+      font-family: sans-serif;
+    }
+    .section-border {
+      border: 2px solid #00ffff;
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .section-border-green {
+      border: 2px solid #00ff00;
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .btn-purple {
+      background-color: #6b21a8;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .btn-purple:hover {
+      background-color: #7c3aed;
+    }
+    .btn-red {
+      background-color: #dc2626;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-align: center;
+      margin-top: 10px;
+    }
+    .btn-red:hover {
+      background-color: #ef4444;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Навигация -->
+  <nav class="bg-purple-700 p-4 flex justify-between items-center text-sm">
+    <div class="flex items-center space-x-4">
+      <span class="text-white font-bold">LibreXChat | Личный кабинет</span>
+      <a href="rules.html" class="hover:underline">Полезные ссылки</a>
+    </div>
+    <div class="flex items-center space-x-4">
+      <a href="profile.html" class="hover:underline">Профиль</a>
+      <a href="index.html" class="hover:underline">Выйти</a>
+      <button onclick="switchLanguage()" class="bg-gray-700 px-2 py-1 rounded hover:bg-gray-600">РУС | ENG</button>
+    </div>
+  </nav>
+
+  <!-- Основной контент -->
+  <main class="flex-grow container mx-auto p-8">
+    <h1 class="text-3xl font-bold text-center mb-10">Мой профиль</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+      <!-- Левый блок -->
+      <div class="flex flex-col">
+        <button class="btn-purple">Данные профиля</button>
+        <button class="btn-purple">Персонажи</button>
+        <button class="btn-purple">Мой центр загрузок</button>
+        <button class="btn-purple opacity-50 cursor-not-allowed">Фракция</button>
+        <button class="btn-red">Удаление профиля</button>
+      </div>
+
+      <!-- Центральный блок -->
+      <div class="section-border">
+        <p><strong>Email:</strong> example@email.com</p>
+        <p><strong>Счёт:</strong> 86828 монет</p>
+        <p><strong>Количество персонажей:</strong> 1 шт.</p>
+        <p><strong>Дата регистрации:</strong> 10.03.2025 г.</p>
+        <p><strong>Время в игре:</strong> 0 д. 18 ч. 52 мин.</p>
+      </div>
+
+      <!-- Правый блок -->
+      <div class="section-border-green">
+        <button class="btn-purple">Сменить Email</button>
+        <button class="btn-purple">Сменить пароль</button>
+        <button class="btn-purple">Восстановление</button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Подвал -->
+  <footer class="text-center text-gray-400 text-sm py-4">
+    © 2025 LibreXChat. Проект создан для всех без исключения. Разработчик: Intriganka и Лосик
+  </footer>
+
+  <script>
+    function switchLanguage() {
+      alert("Смена языка пока в разработке");
+    }
+  </script>
+
+</body>
+</html>
