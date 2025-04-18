@@ -1,23 +1,33 @@
 // login.js
 
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
+// Ждём загрузку страницы
+window.addEventListener('DOMContentLoaded', () => {
 
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
+  const loginForm = document.getElementById('loginForm');
 
-  try {
-    const userCredential = await auth.signInWithEmailAndPassword(email, password);
-    const user = userCredential.user;
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-    if (user.emailVerified) {
-      alert('Добро пожаловать в LibreXChat!');
-      window.location.href = 'profile.html'; // Перенаправление в профиль
-    } else {
-      alert('Пожалуйста, подтвердите свою почту перед входом.');
-      await auth.signOut(); // Выход из аккаунта
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    try {
+      const userCredential = await auth.signInWithEmailAndPassword(email, password);
+      
+      if (userCredential.user.emailVerified) {
+        alert('Успешный вход! Добро пожаловать!');
+        window.location.href = 'profile.html'; // Переход в личный кабинет
+      } else {
+        alert('Пожалуйста, подтвердите вашу почту перед входом.');
+        await auth.signOut();
+      }
+    } catch (error) {
+      alert('Ошибка входа: ' + error.message);
     }
-  } catch (error) {
-    alert('Ошибка входа: ' + error.message);
-  }
+  });
 });
+
+// Переключение языка (если нужно)
+function switchLanguage() {
+  alert('Переключение языка пока в разработке');
+}
