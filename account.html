@@ -2,32 +2,136 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Личный кабинет — LibreXChat</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+  <title>Личный кабинет</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #1f2937;
+      color: white;
+      font-family: sans-serif;
+    }
+    .form-box {
+      background-color: #374151;
+      padding: 30px;
+      border-radius: 8px;
+    }
+    .footer-note {
+      font-size: 13px;
+      color: #aaa;
+      margin-top: 25px;
+    }
+  </style>
 </head>
-<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen px-4">
-  <h1 class="text-3xl font-bold mb-6 text-center">Личный кабинет</h1>
-
-  <form class="bg-gray-800 p-6 rounded-lg shadow-md w-full max-w-md space-y-4">
-    <div>
-      <label for="email" class="block mb-1 text-sm">Email</label>
-      <input type="email" id="email" name="email" required class="w-full px-3 py-2 rounded bg-gray-700 text-white"/>
+<body>
+  <!-- Панель навигации -->
+  <nav class="flex justify-between items-center bg-gray-800 px-6 py-4 text-sm">
+    <div class="flex space-x-6">
+      <a href="index.html" class="nav-item" data-key="nav_news">Новости</a>
+      <a href="account.html" class="nav-item" data-key="nav_account">Личный кабинет</a>
+      <a href="rules.html" class="nav-item" data-key="nav_rules">Правила</a>
+      <a href="#" class="nav-item" data-key="nav_download">Скачать</a>
+      <a href="index.html" class="text-blue-400 underline" data-key="back_top">← Назад на главную</a>
     </div>
     <div>
-      <label for="password" class="block mb-1 text-sm">Пароль</label>
-      <input type="password" id="password" name="password" required class="w-full px-3 py-2 rounded bg-gray-700 text-white"/>
+      <button onclick="switchLanguage()" class="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600">EN / RU</button>
     </div>
-    <div class="flex items-center space-x-2">
-      <input type="checkbox" id="accept" required />
-      <label for="accept" class="text-sm">Я подтверждаю, что ознакомлен(а) и принимаю условия <a href="rules.html" class="underline text-blue-400">Пользовательского соглашения</a> и <a href="rules.html" class="underline text-blue-400">Политики конфиденциальности</a></label>
-    </div>
-    <div class="flex space-x-2">
-      <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Регистрация</button>
-      <button type="button" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded">Войти</button>
-    </div>
-  </form>
+  </nav>
 
-  <footer class="text-gray-500 text-xs mt-6">© 2025 LibreXChat</footer>
+  <main class="max-w-md mx-auto px-4 py-10">
+    <h1 class="text-3xl font-bold text-center mb-6" data-key="account_title">Личный кабинет</h1>
+
+    <div class="form-box">
+      <form id="registerForm" method="POST">
+        <div class="mb-4">
+          <label class="block mb-2" for="email" data-key="email_label">Email</label>
+          <input class="w-full px-3 py-2 rounded text-black" type="email" id="email" name="email" required />
+        </div>
+
+        <div class="mb-4">
+          <label class="block mb-2" for="password" data-key="password_label">Пароль</label>
+          <input class="w-full px-3 py-2 rounded text-black" type="password" id="password" name="password" required />
+        </div>
+
+        <div class="mb-4 flex items-center space-x-2">
+          <input type="checkbox" id="acceptRules" />
+          <label for="acceptRules" data-key="accept_terms">
+            Я подтверждаю, что ознакомлен(а) и принимаю условия <a href="rules.html" class="underline">Пользовательского соглашения</a> и <a href="#" class="underline">Политики конфиденциальности</a>.
+          </label>
+        </div>
+
+        <div class="flex space-x-4">
+          <button type="submit" id="registerBtn" disabled class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded" data-key="register_btn">Зарегистрироваться</button>
+          <button type="button" onclick="alert('Вход в разработке')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded" data-key="login_btn">Войти</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="text-center mt-6">
+      <a href="index.html" class="text-blue-400 underline" data-key="back_bottom">Назад на главную</a>
+    </div>
+
+    <div class="text-center footer-note mt-10" id="footerText">
+      © 2025 LibreXChat. Проект создан для всех без исключения.
+    </div>
+  </main>
+
+  <script>
+    const translations = {
+      ru: {
+        nav_news: "Новости",
+        nav_account: "Личный кабинет",
+        nav_rules: "Правила",
+        nav_download: "Скачать",
+        account_title: "Личный кабинет",
+        email_label: "Email",
+        password_label: "Пароль",
+        accept_terms: "Я подтверждаю, что ознакомлен(а) и принимаю условия Пользовательского соглашения и Политики конфиденциальности.",
+        register_btn: "Зарегистрироваться",
+        login_btn: "Войти",
+        back_top: "← Назад на главную",
+        back_bottom: "Назад на главную",
+        footer: "© 2025 LibreXChat. Проект создан для всех без исключения."
+      },
+      en: {
+        nav_news: "News",
+        nav_account: "Account",
+        nav_rules: "Rules",
+        nav_download: "Download",
+        account_title: "Account",
+        email_label: "Email",
+        password_label: "Password",
+        accept_terms: "I confirm that I have read and accept the Terms of Service and Privacy Policy.",
+        register_btn: "Register",
+        login_btn: "Login",
+        back_top: "← Back to main",
+        back_bottom: "Back to main",
+        footer: "© 2025 LibreXChat. A project created for everyone without exception."
+      }
+    };
+
+    let currentLang = localStorage.getItem("lang") || "ru";
+
+    function switchLanguage() {
+      currentLang = currentLang === "ru" ? "en" : "ru";
+      localStorage.setItem("lang", currentLang);
+      applyTranslations();
+    }
+
+    function applyTranslations() {
+      const t = translations[currentLang];
+      document.querySelectorAll("[data-key]").forEach(el => {
+        const key = el.getAttribute("data-key");
+        if (t[key]) el.textContent = t[key];
+      });
+      document.getElementById("footerText").textContent = t.footer;
+    }
+
+    document.getElementById("acceptRules").addEventListener("change", function () {
+      document.getElementById("registerBtn").disabled = !this.checked;
+    });
+
+    window.onload = applyTranslations;
+  </script>
 </body>
 </html>
