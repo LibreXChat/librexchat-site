@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Вход — LibreXChat</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <title>Вход в аккаунт — LibreXChat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   <style>
     body {
       background-color: #1f2937;
@@ -32,7 +32,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"></script>
 
-  <!-- Инициализация Firebase -->
+  <!-- Конфиг Firebase -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBhmuX9aWec4NjxiSZ1FmqBr7LvioyK1rk",
@@ -46,36 +46,35 @@
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
   </script>
-
 </head>
-<body>
 
-  <!-- Навигация -->
+<body>
   <nav class="flex justify-between items-center bg-gray-800 px-6 py-4 text-sm">
     <div class="flex space-x-6">
       <a href="index.html" class="nav-item">Главная</a>
       <a href="account.html" class="nav-item">Регистрация</a>
+      <a href="rules.html" class="nav-item">Правила</a>
     </div>
   </nav>
 
-  <!-- Контент -->
   <main class="max-w-md mx-auto px-4 py-10">
     <h1 class="text-3xl font-bold text-center mb-6">Вход в аккаунт</h1>
 
     <div class="form-box">
       <form id="loginForm">
         <div class="mb-4">
-          <label class="block mb-2" for="email">Email</label>
-          <input class="w-full px-3 py-2 rounded text-black" type="email" id="email" name="email" required />
+          <label class="block mb-2" for="loginEmail">Email</label>
+          <input class="w-full px-3 py-2 rounded text-black" type="email" id="loginEmail" name="loginEmail" required />
         </div>
 
-        <div class="mb-6">
-          <label class="block mb-2" for="password">Пароль</label>
-          <input class="w-full px-3 py-2 rounded text-black" type="password" id="password" name="password" required />
+        <div class="mb-4">
+          <label class="block mb-2" for="loginPassword">Пароль</label>
+          <input class="w-full px-3 py-2 rounded text-black" type="password" id="loginPassword" name="loginPassword" required />
         </div>
 
-        <div class="flex justify-center">
-          <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded">Войти</button>
+        <div class="flex space-x-4">
+          <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Войти</button>
+          <a href="account.html" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Регистрация</a>
         </div>
       </form>
     </div>
@@ -89,40 +88,30 @@
     </div>
   </main>
 
-  <!-- Скрипт авторизации -->
   <script>
     const loginForm = document.getElementById('loginForm');
 
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
 
       try {
         const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        const user = userCredential.user;
 
-        if (!userCredential.user.emailVerified) {
-          alert('Пожалуйста, подтвердите ваш Email перед входом.');
+        if (user.emailVerified) {
+          alert('Успешный вход! Перенаправляем в личный кабинет...');
+          window.location.href = "profile.html"; // Переход в профиль
+        } else {
+          alert('Пожалуйста, подтвердите свой Email перед входом.');
           await auth.signOut();
-          return;
         }
-
-        // Успешный вход, перебрасываем на профиль
-        window.location.href = "profile.html";
 
       } catch (error) {
-        if (error.code === "auth/user-not-found") {
-          alert("Пользователь с таким Email не найден.");
-        } else if (error.code === "auth/wrong-password") {
-          alert("Неверный пароль.");
-        } else if (error.code === "auth/invalid-email") {
-          alert("Неверный формат Email.");
-        } else {
-          alert("Ошибка входа: " + error.message);
-        }
+        alert('Ошибка входа: ' + error.message);
       }
     });
   </script>
-
 </body>
 </html>
