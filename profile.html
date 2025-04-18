@@ -2,57 +2,80 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Личный кабинет — LibreXChat</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Личный кабинет — LibreXChat</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <style>
     body {
-      background-color: #0a0223;
+      background-color: #0e0e20;
       color: white;
       font-family: sans-serif;
     }
-    .section-border {
-      border: 2px solid #00ffff;
-      border-radius: 8px;
-      padding: 20px;
-      transition: all 0.3s ease;
-    }
-    .section-border:hover {
-      transform: scale(1.02);
-      box-shadow: 0 0 15px #00ffff;
-    }
-    .btn-purple {
-      background-color: #6b21a8;
-      padding: 10px 20px;
-      border-radius: 6px;
+    .btn {
+      background-color: #6a0dad;
+      padding: 12px;
+      border-radius: 10px;
       text-align: center;
-      margin-bottom: 10px;
-      transition: background-color 0.3s;
+      transition: 0.3s;
     }
-    .btn-purple:hover {
-      background-color: #7c3aed;
+    .btn:hover {
+      background-color: #8227c2;
     }
     .btn-red {
       background-color: #dc2626;
-      padding: 10px 20px;
-      border-radius: 6px;
-      text-align: center;
-      margin-top: 10px;
-      transition: background-color 0.3s;
     }
     .btn-red:hover {
-      background-color: #ef4444;
+      background-color: #b91c1c;
     }
-    #lang-switch {
-      position: fixed;
-      bottom: 10px;
-      left: 15px;
+    .glow-box {
+      border: 2px solid cyan;
+      padding: 20px;
+      border-radius: 10px;
+      animation: glow 1.5s infinite alternate;
+    }
+    @keyframes glow {
+      from { box-shadow: 0 0 10px cyan; }
+      to { box-shadow: 0 0 20px cyan; }
     }
   </style>
+</head>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<body>
+  <nav class="flex justify-between bg-purple-700 p-4">
+    <div class="text-white font-bold">LibreXChat | <span data-key="profile_title">Личный кабинет</span></div>
+    <div class="space-x-4">
+      <a href="profile.html" class="text-white" id="profileBtn">Профиль</a>
+      <button onclick="logout()" class="text-white">Выйти</button>
+      <button onclick="switchLanguage()" class="text-white" id="langBtn">РУС | ENG</button>
+    </div>
+  </nav>
+
+  <main class="max-w-6xl mx-auto p-6 grid grid-cols-3 gap-6">
+
+    <div class="space-y-4">
+      <button class="btn w-full" onclick="loadProfile()" data-key="load_profile">Данные профиля</button>
+      <button class="btn w-full" onclick="changeEmail()" data-key="change_email">Сменить Email</button>
+      <button class="btn w-full" onclick="changePassword()" data-key="change_password">Сменить пароль</button>
+      <button class="btn w-full" onclick="recoverPassword()" data-key="recover_password">Восстановление пароля</button>
+      <button class="btn btn-red w-full" onclick="deleteAccount()" data-key="delete_account">Удалить аккаунт</button>
+    </div>
+
+    <div class="glow-box" id="profileInfo">
+      <p data-key="not_authorized">Пользователь не авторизован.</p>
+    </div>
+
+    <div class="glow-box" id="actionResult">
+      <p><strong data-key="info">Информация:</strong></p>
+      <p id="resultText">Здесь будут появляться результаты ваших действий.</p>
+    </div>
+
+  </main>
+
+  <footer class="text-center text-sm text-gray-400 mt-10">
+    &copy; 2025 LibreXChat. Проект создан для всех без исключения. Разработчики: Intriganka и Лосик
+  </footer>
 
   <script>
     const firebaseConfig = {
@@ -62,159 +85,123 @@
       storageBucket: "librexchat-dba06.appspot.com",
       messagingSenderId: "48021503169",
       appId: "1:48021503169:web:fb694c3b1e3416461ae840",
-      measurementId: "G-9K5QGCT108"
     };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
-  </script>
-</head>
 
-<body class="min-h-screen flex flex-col">
-
-  <!-- Навигация -->
-  <nav class="bg-purple-700 p-4 flex justify-between items-center text-sm">
-    <div class="flex items-center space-x-4">
-      <span class="text-white font-bold">LibreXChat | Личный кабинет</span>
-      <a href="rules.html" class="hover:underline">Правила</a>
-    </div>
-    <div class="flex items-center space-x-4">
-      <a href="profile.html" class="hover:underline">Профиль</a>
-      <a href="index.html" class="hover:underline" onclick="logout()">Выйти</a>
-      <button onclick="switchLanguage()" class="bg-gray-700 px-2 py-1 rounded hover:bg-gray-600">РУС | ENG</button>
-    </div>
-  </nav>
-
-  <!-- Основной контент -->
-  <main class="flex-grow container mx-auto p-8">
-    <h1 class="text-3xl font-bold text-center mb-10" id="profileTitle">Мой профиль</h1>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-      <!-- Левый блок -->
-      <div class="flex flex-col">
-        <button onclick="loadProfile()" class="btn-purple">Данные профиля</button>
-        <button onclick="changeEmail()" class="btn-purple">Сменить Email</button>
-        <button onclick="changePassword()" class="btn-purple">Сменить пароль</button>
-        <button onclick="resetPassword()" class="btn-purple">Восстановление пароля</button>
-        <button onclick="deleteAccount()" class="btn-red">Удалить аккаунт</button>
-      </div>
-
-      <!-- Центральный блок -->
-      <div class="section-border" id="profileInfo">
-        <p>Загрузка данных...</p>
-      </div>
-
-      <!-- Правый блок -->
-      <div class="section-border">
-        <p><strong>Информация:</strong><br>Здесь будут появляться результаты ваших действий.</p>
-      </div>
-
-    </div>
-  </main>
-
-  <!-- Подвал -->
-  <footer class="text-center text-gray-400 text-sm py-4">
-    © 2025 LibreXChat. Проект создан для всех без исключения. Разработчик: Intriganka и Лосик
-  </footer>
-
-  <!-- Логика работы -->
-  <script>
-    const translations = {
-      ru: {
-        profileTitle: "Мой профиль",
-      },
-      en: {
-        profileTitle: "My Profile",
-      }
-    };
-
-    let currentLang = localStorage.getItem("lang") || "ru";
-
-    function switchLanguage() {
-      currentLang = currentLang === "ru" ? "en" : "ru";
-      localStorage.setItem("lang", currentLang);
-      applyTranslations();
-    }
-
-    function applyTranslations() {
-      const t = translations[currentLang];
-      if (document.getElementById("profileTitle")) {
-        document.getElementById("profileTitle").textContent = t.profileTitle;
-      }
-    }
-
-    window.onload = () => {
-      applyTranslations();
-      loadProfile();
-    };
-
-    function loadProfile() {
-      const user = auth.currentUser;
-      if (user) {
-        document.getElementById("profileInfo").innerHTML = `
-          <p><strong>Email:</strong> ${user.email}</p>
-          <p><strong>Дата регистрации:</strong> ${new Date(user.metadata.creationTime).toLocaleString()}</p>
-          <p><strong>Последний вход:</strong> ${new Date(user.metadata.lastSignInTime).toLocaleString()}</p>
-        `;
+    // Проверка авторизации
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = 'login.html';
       } else {
-        document.getElementById("profileInfo").innerHTML = "<p>Пользователь не авторизован.</p>";
+        loadProfile();
       }
+    });
+
+    async function loadProfile() {
+      const user = auth.currentUser;
+      if (!user) return;
+      const createdAt = new Date(user.metadata.creationTime).toLocaleDateString();
+      const info = `
+        <strong>Email:</strong> ${user.email}<br>
+        <strong>Дата регистрации:</strong> ${createdAt}<br>
+        <strong>Статус подтверждения:</strong> ${user.emailVerified ? 'Подтверждён' : 'Не подтверждён'}<br>
+      `;
+      document.getElementById('profileInfo').innerHTML = info;
     }
 
     async function changeEmail() {
-      const newEmail = prompt("Введите новый Email:");
+      const newEmail = prompt('Введите новый Email:');
       if (newEmail) {
         try {
           await auth.currentUser.updateEmail(newEmail);
-          alert("Email успешно обновлен.");
+          document.getElementById('resultText').textContent = 'Email успешно изменен!';
           loadProfile();
         } catch (error) {
-          alert("Ошибка смены Email: " + error.message);
+          document.getElementById('resultText').textContent = 'Ошибка: ' + error.message;
         }
       }
     }
 
     async function changePassword() {
-      const newPassword = prompt("Введите новый пароль:");
+      const newPassword = prompt('Введите новый пароль:');
       if (newPassword) {
         try {
           await auth.currentUser.updatePassword(newPassword);
-          alert("Пароль успешно обновлен.");
+          document.getElementById('resultText').textContent = 'Пароль успешно изменен!';
         } catch (error) {
-          alert("Ошибка смены пароля: " + error.message);
+          document.getElementById('resultText').textContent = 'Ошибка: ' + error.message;
         }
       }
     }
 
-    async function resetPassword() {
+    async function recoverPassword() {
       const email = auth.currentUser.email;
-      if (email) {
-        try {
-          await auth.sendPasswordResetEmail(email);
-          alert("Письмо для восстановления пароля отправлено на: " + email);
-        } catch (error) {
-          alert("Ошибка восстановления пароля: " + error.message);
-        }
+      try {
+        await auth.sendPasswordResetEmail(email);
+        document.getElementById('resultText').textContent = 'Письмо для восстановления отправлено на ' + email;
+      } catch (error) {
+        document.getElementById('resultText').textContent = 'Ошибка: ' + error.message;
       }
     }
 
     async function deleteAccount() {
-      if (confirm("Вы уверены, что хотите удалить аккаунт? Это действие необратимо!")) {
+      if (confirm('Вы уверены, что хотите удалить аккаунт?')) {
         try {
           await auth.currentUser.delete();
-          alert("Аккаунт удален.");
-          window.location.href = "index.html";
+          window.location.href = 'account.html';
         } catch (error) {
-          alert("Ошибка удаления аккаунта: " + error.message);
+          document.getElementById('resultText').textContent = 'Ошибка удаления: ' + error.message;
         }
       }
     }
 
     function logout() {
-      auth.signOut().then(() => {
-        window.location.href = "index.html";
+      auth.signOut().then(() => window.location.href = 'login.html');
+    }
+
+    const translations = {
+      ru: {
+        profile_title: 'Личный кабинет',
+        load_profile: 'Данные профиля',
+        change_email: 'Сменить Email',
+        change_password: 'Сменить пароль',
+        recover_password: 'Восстановление пароля',
+        delete_account: 'Удалить аккаунт',
+        not_authorized: 'Пользователь не авторизован.',
+        info: 'Информация:'
+      },
+      en: {
+        profile_title: 'Profile',
+        load_profile: 'Profile Data',
+        change_email: 'Change Email',
+        change_password: 'Change Password',
+        recover_password: 'Password Recovery',
+        delete_account: 'Delete Account',
+        not_authorized: 'User not authorized.',
+        info: 'Info:'
+      }
+    };
+
+    let currentLang = localStorage.getItem('lang') || 'ru';
+
+    function switchLanguage() {
+      currentLang = currentLang === 'ru' ? 'en' : 'ru';
+      localStorage.setItem('lang', currentLang);
+      applyTranslations();
+    }
+
+    function applyTranslations() {
+      const t = translations[currentLang];
+      document.querySelectorAll('[data-key]').forEach(el => {
+        const key = el.getAttribute('data-key');
+        if (t[key]) el.textContent = t[key];
       });
     }
+
+    window.onload = applyTranslations;
+
   </script>
+
 </body>
 </html>
