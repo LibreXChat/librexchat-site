@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Вход — LibreXChat</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
     body {
       background-color: #1f2937;
@@ -32,7 +32,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"></script>
 
-  <!-- Firebase конфигурация -->
+  <!-- Инициализация Firebase -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBhmuX9aWec4NjxiSZ1FmqBr7LvioyK1rk",
@@ -46,39 +46,42 @@
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
   </script>
-</head>
 
+</head>
 <body>
+
+  <!-- Навигация -->
   <nav class="flex justify-between items-center bg-gray-800 px-6 py-4 text-sm">
     <div class="flex space-x-6">
-      <a href="index.html" class="nav-item">На главную</a>
+      <a href="index.html" class="nav-item">Главная</a>
       <a href="account.html" class="nav-item">Регистрация</a>
     </div>
   </nav>
 
+  <!-- Контент -->
   <main class="max-w-md mx-auto px-4 py-10">
-    <h1 class="text-3xl font-bold text-center mb-6">Вход в LibreXChat</h1>
+    <h1 class="text-3xl font-bold text-center mb-6">Вход в аккаунт</h1>
 
     <div class="form-box">
-      <form id="loginForm" method="POST">
+      <form id="loginForm">
         <div class="mb-4">
           <label class="block mb-2" for="email">Email</label>
           <input class="w-full px-3 py-2 rounded text-black" type="email" id="email" name="email" required />
         </div>
 
-        <div class="mb-4">
+        <div class="mb-6">
           <label class="block mb-2" for="password">Пароль</label>
           <input class="w-full px-3 py-2 rounded text-black" type="password" id="password" name="password" required />
         </div>
 
-        <div class="flex space-x-4">
-          <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Войти</button>
+        <div class="flex justify-center">
+          <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded">Войти</button>
         </div>
       </form>
     </div>
 
     <div class="text-center mt-6">
-      <a href="account.html" class="text-blue-400 underline">Нет аккаунта? Зарегистрируйтесь</a>
+      <a href="index.html" class="text-blue-400 underline">← Назад на главную</a>
     </div>
 
     <div class="text-center footer-note mt-10">
@@ -86,10 +89,40 @@
     </div>
   </main>
 
-  <div id="lang-switch">
-    <button onclick="switchLanguage()" class="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600">EN / RU</button>
-  </div>
+  <!-- Скрипт авторизации -->
+  <script>
+    const loginForm = document.getElementById('loginForm');
 
-  <script src="login.js"></script>
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      try {
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+
+        if (!userCredential.user.emailVerified) {
+          alert('Пожалуйста, подтвердите ваш Email перед входом.');
+          await auth.signOut();
+          return;
+        }
+
+        // Успешный вход, перебрасываем на профиль
+        window.location.href = "profile.html";
+
+      } catch (error) {
+        if (error.code === "auth/user-not-found") {
+          alert("Пользователь с таким Email не найден.");
+        } else if (error.code === "auth/wrong-password") {
+          alert("Неверный пароль.");
+        } else if (error.code === "auth/invalid-email") {
+          alert("Неверный формат Email.");
+        } else {
+          alert("Ошибка входа: " + error.message);
+        }
+      }
+    });
+  </script>
+
 </body>
 </html>
