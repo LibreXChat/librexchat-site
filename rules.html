@@ -2,40 +2,46 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>LibreXChat — Правила</title>
+  <title>Правила | LibreXChat</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   <style>
     body {
       font-family: sans-serif;
       background-color: #1f2937;
       color: white;
     }
-    .back-button {
-      margin-top: 30px;
+    ul {
+      list-style: disc;
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
+  <!-- Навигация -->
   <nav class="flex justify-between items-center bg-gray-800 px-6 py-4 text-sm">
     <div class="flex space-x-6">
       <a href="index.html" class="nav-item" data-key="nav_news">Новости</a>
       <a href="account.html" class="nav-item" data-key="nav_account">Личный кабинет</a>
-      <a href="rules.html" class="nav-item" data-key="nav_rules">Правила</a>
+      <a href="rules.html" class="nav-item text-blue-400 underline" data-key="nav_rules">Правила</a>
       <a href="#" class="nav-item" data-key="nav_download">Скачать</a>
+      <a href="index.html" class="text-blue-400 underline" data-key="back">← Назад на главную</a>
     </div>
     <div>
       <button onclick="switchLanguage()" class="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600">EN / RU</button>
     </div>
   </nav>
 
-  <main class="max-w-4xl mx-auto px-6 py-8">
-    <h1 class="text-3xl font-bold mb-6" data-key="rules_title">Правила LibreXChat</h1>
-    <ul id="rulesList" class="list-disc pl-6 space-y-4 text-lg">
-      <!-- Заполняется скриптом -->
-    </ul>
-    <div class="text-center back-button">
-      <a href="index.html" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-full text-white" data-key="back">Назад на главную</a>
+  <!-- Контент -->
+  <main class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6" data-key="title">Правила LibreXChat</h1>
+    <ul id="rulesList"></ul>
+
+    <div class="text-center mt-6">
+      <a href="index.html" class="text-blue-400 underline" data-key="back_bottom">Назад на главную</a>
     </div>
   </main>
 
@@ -46,19 +52,20 @@
         nav_account: "Личный кабинет",
         nav_rules: "Правила",
         nav_download: "Скачать",
-        rules_title: "Правила LibreXChat",
-        back: "Назад на главную",
+        back: "← Назад на главную",
+        back_bottom: "Назад на главную",
+        title: "Правила LibreXChat",
         rules: [
-          "Любое изменение файлов игры запрещено и ведет к блокировке аккаунта.",
-          "Запрещено обсуждение войны, религии, национальности — это ведет к бану.",
-          "Запрещены преследование, оскорбления, публикация личных данных и фото других пользователей.",
-          "Запрещено использовать баги, сторонние программы, боты или вредоносные скрипты.",
-          "Категорически запрещён спам и массовые однотипные сообщения в чате.",
-          "Модераторы и администрация имеют право принимать меры при нарушении правил.",
-          "Любые ложные жалобы в адрес других пользователей караются блокировкой.",
-          "Вы обязаны самостоятельно соблюдать меры по защите своей личной информации.",
-          "Передача своего аккаунта другим лицам запрещена.",
-          "Запрещено использование чужого контента без разрешения (аватары, фото, тексты и т.д.)."
+          "Запрещены любые модификации клиента и вмешательства в файлы игры. Нарушение ведет к блокировке.",
+          "Темы, касающиеся войны, религии и национальности, строго запрещены и караются баном.",
+          "Запрещены оскорбления, публикация личной информации, домогательства и преследование.",
+          "Запрещено выдавать себя за администрацию или модераторов. За это предусмотрен бан.",
+          "Модераторы имеют право принимать меры при нарушении правил. Их указания обязательны к исполнению.",
+          "Запрещен спам, флуд, а также рассылка любых нежелательных сообщений.",
+          "Запрещено распространять вирусы или вредоносное ПО через наш проект.",
+          "Запрещена публикация и использование контента, нарушающего авторские права.",
+          "Запрещено создание аккаунта лицам младше 18 лет. Мы оставляем за собой право проверять возраст.",
+          "Нельзя передавать аккаунт другим лицам. Ответственность за безопасность учетной записи несёт сам пользователь."
         ]
       },
       en: {
@@ -66,19 +73,20 @@
         nav_account: "Account",
         nav_rules: "Rules",
         nav_download: "Download",
-        rules_title: "LibreXChat Rules",
-        back: "Back to Main",
+        back: "← Back to Main",
+        back_bottom: "Back to Main",
+        title: "LibreXChat Rules",
         rules: [
-          "Modifying game files is strictly prohibited and leads to account ban.",
-          "Discussions about war, religion, or nationality are forbidden and result in ban.",
-          "Harassment, insults, or posting personal data/photos of other users is prohibited.",
-          "Exploiting bugs, using bots or malicious scripts is not allowed.",
-          "Spam or repetitive messages in chat are forbidden.",
-          "Moderators and admins may take actions against rule violations.",
-          "False reports against users will result in a ban.",
-          "You are responsible for protecting your own private information.",
-          "Sharing your account with others is not allowed.",
-          "Using someone else's content (avatars, photos, texts, etc.) without permission is prohibited."
+          "Any modifications of the game client or file tampering are prohibited. Violators will be banned.",
+          "Discussions of war, religion, and nationality are strictly forbidden and result in a ban.",
+          "Insults, sharing personal data, harassment, and stalking are not allowed.",
+          "Impersonating administration or moderators will result in a ban.",
+          "Moderators may take action if rules are violated. Their instructions must be followed.",
+          "Spam, flooding, and unsolicited messaging are prohibited.",
+          "Distributing viruses or malicious software through the project is forbidden.",
+          "Posting or using content that violates copyright is not allowed.",
+          "Users under 18 are not allowed. We reserve the right to verify age.",
+          "Account sharing is forbidden. Users are responsible for their own account security."
         ]
       }
     };
@@ -98,12 +106,12 @@
         if (t[key]) el.textContent = t[key];
       });
 
-      const rulesList = document.getElementById("rulesList");
-      rulesList.innerHTML = "";
+      const list = document.getElementById("rulesList");
+      list.innerHTML = "";
       t.rules.forEach(rule => {
         const li = document.createElement("li");
         li.textContent = rule;
-        rulesList.appendChild(li);
+        list.appendChild(li);
       });
     }
 
