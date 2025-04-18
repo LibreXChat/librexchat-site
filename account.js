@@ -1,14 +1,7 @@
-// account.js
-
 // Ждём загрузки страницы
 window.addEventListener('DOMContentLoaded', () => {
-
   applyTranslations();
 
-  // Перевод
-  document.getElementById("lang-switch-btn").addEventListener("click", switchLanguage);
-
-  // Обработка регистрации
   const registerForm = document.getElementById('registerForm');
   registerForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -18,21 +11,19 @@ window.addEventListener('DOMContentLoaded', () => {
     try {
       const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
       await userCredential.user.sendEmailVerification();
-      alert('Письмо с подтверждением отправлено на ваш Email.');
+      alert('✅ Письмо с подтверждением отправлено на ваш Email. Проверьте почту!');
       registerForm.reset();
     } catch (error) {
-      console.error(error);
       alert('Ошибка: ' + error.message);
     }
   });
 
-  // Блокировка кнопки без галочки
   document.getElementById("acceptRules").addEventListener("change", function () {
     document.getElementById("registerBtn").disabled = !this.checked;
   });
 });
 
-// Переводы
+// Перевод текста
 let currentLang = localStorage.getItem("lang") || "ru";
 
 function switchLanguage() {
@@ -78,9 +69,8 @@ function applyTranslations() {
   const t = translations[currentLang];
   document.querySelectorAll("[data-key]").forEach(el => {
     const key = el.getAttribute("data-key");
-    if (t[key]) el.innerHTML = t[key];
+    if (t[key]) el.textContent = t[key];
   });
-
   const footer = document.getElementById("footerText");
   if (footer) footer.textContent = t.footer;
 }
