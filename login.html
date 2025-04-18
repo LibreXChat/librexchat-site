@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Вход — LibreXChat</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
@@ -21,12 +21,18 @@
       color: #aaa;
       margin-top: 25px;
     }
+    #lang-switch {
+      position: fixed;
+      bottom: 10px;
+      left: 15px;
+    }
   </style>
 
-  <!-- Firebase -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"></script>
 
+  <!-- Firebase конфигурация -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBhmuX9aWec4NjxiSZ1FmqBr7LvioyK1rk",
@@ -34,14 +40,22 @@
       projectId: "librexchat-dba06",
       storageBucket: "librexchat-dba06.appspot.com",
       messagingSenderId: "48021503169",
-      appId: "1:48021503169:web:fb694c3b1e3416461ae840"
+      appId: "1:48021503169:web:fb694c3b1e3416461ae840",
+      measurementId: "G-9K5QGCT108"
     };
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
   </script>
-
 </head>
+
 <body>
+  <nav class="flex justify-between items-center bg-gray-800 px-6 py-4 text-sm">
+    <div class="flex space-x-6">
+      <a href="index.html" class="nav-item">На главную</a>
+      <a href="account.html" class="nav-item">Регистрация</a>
+    </div>
+  </nav>
+
   <main class="max-w-md mx-auto px-4 py-10">
     <h1 class="text-3xl font-bold text-center mb-6">Вход в LibreXChat</h1>
 
@@ -57,20 +71,24 @@
           <input class="w-full px-3 py-2 rounded text-black" type="password" id="password" name="password" required />
         </div>
 
-        <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded">
-          Войти
-        </button>
+        <div class="flex space-x-4">
+          <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Войти</button>
+        </div>
       </form>
     </div>
 
     <div class="text-center mt-6">
-      <a href="index.html" class="text-blue-400 underline">Назад на главную</a>
+      <a href="account.html" class="text-blue-400 underline">Нет аккаунта? Зарегистрируйтесь</a>
     </div>
 
     <div class="text-center footer-note mt-10">
       © 2025 LibreXChat. Проект создан для всех без исключения.
     </div>
   </main>
+
+  <div id="lang-switch">
+    <button onclick="switchLanguage()" class="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600">EN / RU</button>
+  </div>
 
   <script src="login.js"></script>
 </body>
