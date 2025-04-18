@@ -1,152 +1,91 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Мой профиль | LibreXChat</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <title>Мой профиль — LibreXChat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+      color: white;
+      font-family: 'Arial', sans-serif;
+    }
+    .panel {
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      background-color: #6d28d9;
+      padding: 10px 20px;
+      border-radius: 8px;
+      margin: 5px 0;
+      width: 100%;
+      text-align: center;
+      transition: background-color 0.3s;
+    }
+    .btn:hover {
+      background-color: #7c3aed;
+    }
+    .btn-danger {
+      background-color: #dc2626;
+    }
+    .btn-danger:hover {
+      background-color: #ef4444;
+    }
+    #infoBox {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 12px;
+      opacity: 0;
+      transition: opacity 0.5s;
+      font-size: 14px;
+      z-index: 9999;
+    }
+  </style>
+
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-  <style>
-    body { background-color: #0f172a; color: white; font-family: sans-serif; }
-    .btn { background-color: #4f46e5; padding: 10px 20px; border-radius: 6px; margin: 5px 0; text-align: center; }
-    .btn:hover { background-color: #6366f1; }
-    .btn-red { background-color: #dc2626; }
-    .btn-red:hover { background-color: #ef4444; }
-    .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(3px); justify-content: center; align-items: center; }
-    .modal { background: #1e293b; padding: 20px; border-radius: 8px; width: 300px; }
-  </style>
 </head>
 
-<body class="flex flex-col min-h-screen">
-  <nav class="bg-indigo-800 p-4 flex justify-between text-sm">
-    <div class="flex space-x-6">
-      <a href="index.html">Главная</a>
-      <a href="rules.html">Правила</a>
-      <a href="index.html" class="text-blue-400">← Назад</a>
+<body class="p-6">
+
+  <header class="flex justify-between items-center mb-10">
+    <h1 class="text-3xl font-bold">Мой профиль</h1>
+    <nav class="flex gap-4 text-sm">
+      <a href="index.html" class="hover:underline">Главная</a>
+      <a href="rules.html" class="hover:underline">Правила</a>
+      <button onclick="logout()" class="hover:underline text-red-400">Выйти</button>
+    </nav>
+  </header>
+
+  <div class="grid md:grid-cols-3 gap-8">
+    <div class="panel">
+      <button onclick="loadProfile()" class="btn">Данные профиля</button>
+      <button onclick="changeEmail()" class="btn">Сменить Email</button>
+      <button onclick="changePassword()" class="btn">Сменить пароль</button>
+      <button onclick="recoverPassword()" class="btn">Восстановление пароля</button>
+      <button onclick="deleteAccount()" class="btn btn-danger">Удалить аккаунт</button>
     </div>
-    <div>
-      <button onclick="switchLanguage()" class="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600">RU / EN</button>
-    </div>
-  </nav>
 
-  <main class="flex-grow container mx-auto p-6">
-    <h1 class="text-3xl text-center font-bold mb-10" id="profile_title">Мой профиль</h1>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-      <div class="flex flex-col">
-        <button class="btn" onclick="openModal('email')" id="change_email">Сменить Email</button>
-        <button class="btn" onclick="openModal('password')" id="change_password">Сменить пароль</button>
-        <button class="btn" onclick="openModal('recovery')" id="recover_password">Восстановить пароль</button>
-        <button class="btn btn-red" onclick="logout()" id="logout_btn">Выйти</button>
-      </div>
-
-      <div class="col-span-2">
-        <div class="bg-gray-800 p-6 rounded-lg">
-          <p><strong>Email:</strong> <span id="userEmail">Загрузка...</span></p>
-          <p><strong>Дата регистрации:</strong> <span id="userRegDate">Загрузка...</span></p>
-        </div>
-      </div>
-
-    </div>
-  </main>
-
-  <footer class="text-center text-gray-400 text-sm py-4">
-    © 2025 LibreXChat. Проект создан для всех без исключения.
-  </footer>
-
-  <!-- Модалка -->
-  <div id="modal-bg" class="modal-bg flex">
-    <div class="modal">
-      <h2 class="text-xl font-bold mb-4" id="modal-title">Модальное окно</h2>
-      <input type="email" id="modal-input" class="w-full p-2 rounded mb-4 text-black" placeholder="Введите данные...">
-      <button onclick="confirmModal()" class="btn w-full">Подтвердить</button>
-      <button onclick="closeModal()" class="btn btn-red w-full mt-2">Отмена</button>
+    <div class="panel col-span-2">
+      <h2 class="text-xl font-semibold mb-4">Профиль:</h2>
+      <p><strong>Email:</strong> <span id="profileEmail">Загрузка...</span></p>
+      <p><strong>Дата регистрации:</strong> <span id="profileRegDate">Загрузка...</span></p>
     </div>
   </div>
 
-  <script>
-    // Firebase подключение
-    const firebaseConfig = {
-      apiKey: "AIzaSyBhmuX9aWec4NjxiSZ1FmqBr7LvioyK1rk",
-      authDomain: "librexchat-dba06.firebaseapp.com",
-      projectId: "librexchat-dba06",
-      storageBucket: "librexchat-dba06.appspot.com",
-      messagingSenderId: "48021503169",
-      appId: "1:48021503169:web:fb694c3b1e3416461ae840",
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
+  <!-- Блок уведомлений -->
+  <div id="infoBox"></div>
 
-    let currentAction = "";
-
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        document.getElementById('userEmail').textContent = user.email;
-        const createdAt = new Date(user.metadata.creationTime);
-        document.getElementById('userRegDate').textContent = createdAt.toLocaleDateString();
-      } else {
-        window.location.href = 'login.html';
-      }
-    });
-
-    function openModal(action) {
-      currentAction = action;
-      document.getElementById('modal-title').textContent = (action === 'email') ? 'Новый Email' : (action === 'password') ? 'Новый пароль' : 'Email для восстановления';
-      document.getElementById('modal-input').value = '';
-      document.getElementById('modal-input').type = (action === 'password') ? 'password' : 'email';
-      document.getElementById('modal-bg').style.display = 'flex';
-    }
-
-    function closeModal() {
-      document.getElementById('modal-bg').style.display = 'none';
-    }
-
-    async function confirmModal() {
-      const value = document.getElementById('modal-input').value;
-      try {
-        const user = auth.currentUser;
-        if (currentAction === 'email') {
-          await user.updateEmail(value);
-          alert('Email обновлён!');
-          window.location.reload();
-        } else if (currentAction === 'password') {
-          await user.updatePassword(value);
-          alert('Пароль обновлён!');
-          window.location.reload();
-        } else if (currentAction === 'recovery') {
-          await auth.sendPasswordResetEmail(value);
-          alert('Письмо для восстановления отправлено!');
-        }
-        closeModal();
-      } catch (error) {
-        alert('Ошибка: ' + error.message);
-      }
-    }
-
-    function logout() {
-      auth.signOut().then(() => window.location.href = 'index.html');
-    }
-
-    const translations = {
-      ru: { profile_title: "Мой профиль", change_email: "Сменить Email", change_password: "Сменить пароль", recover_password: "Восстановить пароль", logout_btn: "Выйти" },
-      en: { profile_title: "My Profile", change_email: "Change Email", change_password: "Change Password", recover_password: "Password Recovery", logout_btn: "Logout" }
-    };
-
-    function switchLanguage() {
-      const lang = (localStorage.getItem('lang') === 'ru') ? 'en' : 'ru';
-      localStorage.setItem('lang', lang);
-      document.getElementById('profile_title').textContent = translations[lang].profile_title;
-      document.getElementById('change_email').textContent = translations[lang].change_email;
-      document.getElementById('change_password').textContent = translations[lang].change_password;
-      document.getElementById('recover_password').textContent = translations[lang].recover_password;
-      document.getElementById('logout_btn').textContent = translations[lang].logout_btn;
-    }
-
-    window.onload = () => {
-      if (localStorage.getItem('lang') === 'en') switchLanguage();
-    }
-  </script>
+  <!-- Скрипты -->
+  <script src="profile.js"></script>
 </body>
 </html>
