@@ -28,11 +28,11 @@
     }
   </style>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"></script>
+  <!-- Firebase SDK (совместимая версия) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
-  <!-- Конфиг Firebase -->
+  <!-- Firebase конфигурация -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBhmuX9aWec4NjxiSZ1FmqBr7LvioyK1rk",
@@ -43,9 +43,10 @@
       appId: "1:48021503169:web:fb694c3b1e3416461ae840",
       measurementId: "G-9K5QGCT108"
     };
-    const app = firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
   </script>
+
 </head>
 
 <body>
@@ -74,7 +75,7 @@
 
         <div class="flex space-x-4">
           <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Войти</button>
-          <a href="account.html" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Регистрация</a>
+          <a href="account.html" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-center">Регистрация</a>
         </div>
       </form>
     </div>
@@ -88,6 +89,7 @@
     </div>
   </main>
 
+  <!-- Скрипт для обработки входа -->
   <script>
     const loginForm = document.getElementById('loginForm');
 
@@ -107,11 +109,11 @@
           alert('Пожалуйста, подтвердите свой Email перед входом.');
           await auth.signOut();
         }
-
       } catch (error) {
         alert('Ошибка входа: ' + error.message);
       }
     });
   </script>
+
 </body>
 </html>
