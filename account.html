@@ -27,25 +27,6 @@
       left: 15px;
     }
   </style>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"></script>
-
-  <!-- Подключаем Firebase конфиг -->
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBhmuX9aWec4NjxiSZ1FmqBr7LvioyK1rk",
-      authDomain: "librexchat-dba06.firebaseapp.com",
-      projectId: "librexchat-dba06",
-      storageBucket: "librexchat-dba06.appspot.com",
-      messagingSenderId: "48021503169",
-      appId: "1:48021503169:web:fb694c3b1e3416461ae840",
-      measurementId: "G-9K5QGCT108"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-  </script>
 </head>
 
 <body>
@@ -104,7 +85,27 @@
     <button onclick="switchLanguage()" class="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600">EN / RU</button>
   </div>
 
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"></script>
+
+  <!-- Firebase конфигурация -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBhmuX9aWec4NjxiSZ1FmqBr7LvioyK1rk",
+      authDomain: "librexchat-dba06.firebaseapp.com",
+      projectId: "librexchat-dba06",
+      storageBucket: "librexchat-dba06.appspot.com",
+      messagingSenderId: "48021503169",
+      appId: "1:48021503169:web:fb694c3b1e3416461ae840",
+      measurementId: "G-9K5QGCT108"
+    };
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+  </script>
+
   <!-- Подключение скрипта управления языком и регистрацией -->
   <script src="account.js"></script>
+
 </body>
 </html>
