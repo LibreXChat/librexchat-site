@@ -1,54 +1,12 @@
 // account.js
 
-// Инициализация Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyBhmuX9aWec4NjxiSZ1FmqBr7LvioyK1rk",
-  authDomain: "librexchat-dba06.firebaseapp.com",
-  projectId: "librexchat-dba06",
-  storageBucket: "librexchat-dba06.appspot.com",
-  messagingSenderId: "48021503169",
-  appId: "1:48021503169:web:fb694c3b1e3416461ae840",
-  measurementId: "G-9K5QGCT108"
-};
-
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-
-// Ждём загрузки страницы
-window.addEventListener('DOMContentLoaded', () => {
-
-  applyTranslations();
-
-  const registerForm = document.getElementById('registerForm');
-  registerForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-
-    try {
-      const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-      await userCredential.user.sendEmailVerification();
-      alert('Письмо с подтверждением отправлено на ваш Email.');
-      registerForm.reset();
-    } catch (error) {
-      alert('Ошибка: ' + error.message);
-    }
-  });
-
-  document.getElementById("acceptRules").addEventListener("change", function () {
-    document.getElementById("registerBtn").disabled = !this.checked;
-  });
-
-});
-
-// Переключение языка
+// Перевод текста
 function switchLanguage() {
   currentLang = currentLang === "ru" ? "en" : "ru";
   localStorage.setItem("lang", currentLang);
   applyTranslations();
 }
 
-// Перевод текста
 function applyTranslations() {
   const translations = {
     ru: {
@@ -90,7 +48,31 @@ function applyTranslations() {
     const key = el.getAttribute("data-key");
     if (t[key]) el.textContent = t[key];
   });
-
   const footer = document.getElementById("footerText");
   if (footer) footer.textContent = t.footer;
 }
+
+// Обработка регистрации
+window.addEventListener('DOMContentLoaded', () => {
+  applyTranslations();
+
+  const registerForm = document.getElementById('registerForm');
+  registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    try {
+      const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+      await userCredential.user.sendEmailVerification();
+      alert('Письмо с подтверждением отправлено на ваш Email.');
+      registerForm.reset();
+    } catch (error) {
+      alert('Ошибка: ' + error.message);
+    }
+  });
+
+  document.getElementById("acceptRules").addEventListener("change", function () {
+    document.getElementById("registerBtn").disabled = !this.checked;
+  });
+});
