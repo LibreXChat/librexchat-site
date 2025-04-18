@@ -5,7 +5,6 @@
   <title>LibreXChat</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
-  <script src="lang.js" defer></script>
   <style>
     body {
       font-family: sans-serif;
@@ -22,14 +21,14 @@
     }
   </style>
 </head>
-<body onload="switchLanguage('ru')">
+<body>
   <nav class="flex justify-between items-center bg-gray-800 px-6 py-4 text-sm">
     <div class="flex space-x-6">
-      <a href="#" class="nav-item hover:text-blue-400">Новости</a>
-      <a href="account.html" class="nav-item hover:text-blue-400">Личный кабинет</a>
-      <a href="rules.html" class="nav-item hover:text-blue-400">Правила</a>
-      <a href="#" class="nav-item hover:text-blue-400">Скачать</a>
-      <a href="https://t.me/librexchat_chat" target="_blank" class="nav-item hover:text-blue-400">Присоединиться</a>
+      <a href="#" class="nav-item" data-key="nav_news">Новости</a>
+      <a href="account.html" class="nav-item" data-key="nav_account">Личный кабинет</a>
+      <a href="rules.html" class="nav-item" data-key="nav_rules">Правила</a>
+      <a href="#" class="nav-item" data-key="nav_download">Скачать</a>
+      <a href="https://t.me/librexchat_chat" target="_blank" class="nav-item" data-key="join">Присоединиться</a>
       <a href="https://discord.gg/46JVhzvp" target="_blank"><img src="https://img.icons8.com/ios-filled/20/ffffff/discord-logo.png"/></a>
       <a href="https://t.me/librexchat_chat" target="_blank"><img src="https://img.icons8.com/ios-filled/20/ffffff/telegram-app.png"/></a>
     </div>
@@ -43,10 +42,10 @@
   </header>
 
   <main class="max-w-3xl mx-auto px-4 py-8 text-center">
-    <h2 class="text-2xl font-semibold mb-4" id="whatIs">Что такое LibreXChat?</h2>
-    <p class="text-lg leading-relaxed" id="desc">
+    <h2 class="text-2xl font-semibold mb-4" data-key="whatIs">Что такое LibreXChat?</h2>
+    <p class="text-lg leading-relaxed" data-key="desc">
       LibreXChat — это многопользовательский онлайн-мир, в котором игроки могут общаться, флиртовать, развлекаться и выражать свои желания без ограничений.
-      <br><br>Игра абсолютно, <strong>бесплатна</strong>,но для желающих есть возможность приобрести VIP-статус с особыми преимуществами.
+      <br><br>Игра абсолютно <strong>бесплатна</strong>, но для желающих есть возможность приобрести VIP-статус с особыми преимуществами.
       <br><br>На нашем сервере ты сможешь:
       <br>– встретить новых друзей,
       <br>– создать пару или семью,
@@ -59,9 +58,74 @@
   </main>
 
   <footer class="text-center py-6 text-sm text-gray-400">
-    <p id="footerText">© 2025 LibreXChat. Проект создан для всех без исключения.</p>
+    <p data-key="footerText">© 2025 LibreXChat. Проект создан для всех без исключения.</p>
   </footer>
 
   <div id="developer">Разработчик: Intriganka и Лосик</div>
+
+  <script>
+    const translations = {
+      ru: {
+        nav_news: "Новости",
+        nav_account: "Личный кабинет",
+        nav_rules: "Правила",
+        nav_download: "Скачать",
+        join: "Присоединиться",
+        whatIs: "Что такое LibreXChat?",
+        desc: `LibreXChat — это многопользовательский онлайн-мир, в котором игроки могут общаться, флиртовать, развлекаться и выражать свои желания без ограничений.
+        <br><br>Игра абсолютно <strong>бесплатна</strong>, но для желающих есть возможность приобрести VIP-статус с особыми преимуществами.
+        <br><br>На нашем сервере ты сможешь:
+        <br>– встретить новых друзей,
+        <br>– создать пару или семью,
+        <br>– завести лёгкие отношения или страстный роман,
+        <br>– устроиться на работу и получать игровую валюту,
+        <br>– посетить вечеринки с реальными диджеями и танцполами,
+        <br>– и просто расслабиться в свободной атмосфере.
+        <br><br>🎉 Присоединяйся и стань частью открытого и свободного мира!`,
+        footerText: "© 2025 LibreXChat. Проект создан для всех без исключения."
+      },
+      en: {
+        nav_news: "News",
+        nav_account: "Account",
+        nav_rules: "Rules",
+        nav_download: "Download",
+        join: "Join",
+        whatIs: "What is LibreXChat?",
+        desc: `LibreXChat is a multiplayer online world where players can chat, flirt, have fun and express their desires without restrictions.
+        <br><br>The game is completely <strong>free</strong>, but VIP status is available with special perks.
+        <br><br>On our server, you can:
+        <br>– meet new friends,
+        <br>– create a couple or family,
+        <br>– find casual or passionate relationships,
+        <br>– get a job and earn in-game currency,
+        <br>– enjoy parties with real DJs and dance floors,
+        <br>– and just relax in a free atmosphere.
+        <br><br>🎉 Join us and become part of an open and free world!`,
+        footerText: "© 2025 LibreXChat. A project created for everyone without exception."
+      }
+    };
+
+    let currentLang = "ru";
+
+    function switchLanguage() {
+      currentLang = currentLang === "ru" ? "en" : "ru";
+      const elements = document.querySelectorAll("[data-key]");
+      elements.forEach(el => {
+        const key = el.getAttribute("data-key");
+        const value = translations[currentLang][key];
+        if (key === "desc") {
+          el.innerHTML = value;
+        } else {
+          el.textContent = value;
+        }
+      });
+    }
+
+    // Автозагрузка перевода при старте
+    window.onload = () => {
+      switchLanguage(); // Переключит на английский
+      switchLanguage(); // Вернёт на русский
+    };
+  </script>
 </body>
 </html>
