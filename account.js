@@ -1,6 +1,40 @@
 // account.js
 
-// Перевод текста
+// Ждём загрузки страницы
+window.addEventListener('DOMContentLoaded', () => {
+
+  applyTranslations();
+
+  // Перевод
+  document.getElementById("lang-switch-btn").addEventListener("click", switchLanguage);
+
+  // Обработка регистрации
+  const registerForm = document.getElementById('registerForm');
+  registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    try {
+      const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+      await userCredential.user.sendEmailVerification();
+      alert('Письмо с подтверждением отправлено на ваш Email.');
+      registerForm.reset();
+    } catch (error) {
+      console.error(error);
+      alert('Ошибка: ' + error.message);
+    }
+  });
+
+  // Блокировка кнопки без галочки
+  document.getElementById("acceptRules").addEventListener("change", function () {
+    document.getElementById("registerBtn").disabled = !this.checked;
+  });
+});
+
+// Переводы
+let currentLang = localStorage.getItem("lang") || "ru";
+
 function switchLanguage() {
   currentLang = currentLang === "ru" ? "en" : "ru";
   localStorage.setItem("lang", currentLang);
@@ -41,38 +75,12 @@ function applyTranslations() {
     }
   };
 
-  const currentLang = localStorage.getItem("lang") || "ru";
   const t = translations[currentLang];
-
   document.querySelectorAll("[data-key]").forEach(el => {
     const key = el.getAttribute("data-key");
-    if (t[key]) el.textContent = t[key];
+    if (t[key]) el.innerHTML = t[key];
   });
+
   const footer = document.getElementById("footerText");
   if (footer) footer.textContent = t.footer;
 }
-
-// Обработка регистрации
-window.addEventListener('DOMContentLoaded', () => {
-  applyTranslations();
-
-  const registerForm = document.getElementById('registerForm');
-  registerForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-
-    try {
-      const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
-      await userCredential.user.sendEmailVerification();
-      alert('Письмо с подтверждением отправлено на ваш Email.');
-      registerForm.reset();
-    } catch (error) {
-      alert('Ошибка: ' + error.message);
-    }
-  });
-
-  document.getElementById("acceptRules").addEventListener("change", function () {
-    document.getElementById("registerBtn").disabled = !this.checked;
-  });
-});
