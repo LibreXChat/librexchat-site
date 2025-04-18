@@ -1,5 +1,4 @@
 // firebase-config.js
-
 const firebaseConfig = {
   apiKey: "AIzaSyBhmuX9aWec4NjxiSZ1FmqBr7LvioyK1rk",
   authDomain: "librexchat-dba06.firebaseapp.com",
@@ -10,6 +9,5 @@ const firebaseConfig = {
   measurementId: "G-9K5QGCT108"
 };
 
-// Инициализация Firebase (если используется в этом же файле)
 firebase.initializeApp(firebaseConfig);
-
+const auth = firebase.auth();
