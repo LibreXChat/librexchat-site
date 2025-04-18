@@ -2,68 +2,112 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Правила — LibreXChat</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <title>LibreXChat — Правила</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #1f2937;
+      color: white;
+    }
+    .back-button {
+      margin-top: 30px;
+    }
+  </style>
 </head>
-<body class="bg-gray-900 text-white font-sans">
+<body>
   <nav class="flex justify-between items-center bg-gray-800 px-6 py-4 text-sm">
     <div class="flex space-x-6">
-      <a href="index.html" class="hover:text-blue-400">Главная</a>
+      <a href="index.html" class="nav-item" data-key="nav_news">Новости</a>
+      <a href="account.html" class="nav-item" data-key="nav_account">Личный кабинет</a>
+      <a href="rules.html" class="nav-item" data-key="nav_rules">Правила</a>
+      <a href="#" class="nav-item" data-key="nav_download">Скачать</a>
+    </div>
+    <div>
+      <button onclick="switchLanguage()" class="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600">EN / RU</button>
     </div>
   </nav>
 
-  <main class="max-w-4xl mx-auto px-4 py-10">
-    <h1 class="text-3xl font-bold text-center mb-6">Правила проекта LibreXChat</h1>
-
-    <ol class="list-decimal space-y-4 pl-6 text-lg">
-      <li><strong>Общие положения:</strong> Используя наш проект, вы соглашаетесь соблюдать настоящие правила. В случае несогласия вы обязаны прекратить использование проекта.</li>
-      
-      <li><strong>Безопасность и поведение:</strong>
-        <ul class="list-disc pl-6 mt-2 space-y-2">
-          <li>Запрещено вредить другим игрокам: оскорбления, угрозы, преследование, шантаж и другие формы агрессии караются баном.</li>
-          <li>Запрещена пропаганда войны, религиозных, национальных и политических тем.</li>
-          <li>Запрещены действия, нарушающие стабильность или безопасность игры, включая читы, вирусы, фишинг, баг-эксплойты и т.д.</li>
-        </ul>
-      </li>
-
-      <li><strong>Конфиденциальность:</strong>
-        <ul class="list-disc pl-6 mt-2 space-y-2">
-          <li>Запрещено распространять личную информацию других игроков без их согласия.</li>
-          <li>Фотографии других игроков можно публиковать только с их письменного разрешения.</li>
-        </ul>
-      </li>
-
-      <li><strong>Контент:</strong>
-        <ul class="list-disc pl-6 mt-2 space-y-2">
-          <li>Уважайте виртуальную собственность других пользователей и проекта.</li>
-          <li>Запрещены любые попытки кражи, удаления, модификации или использования чужого контента без разрешения.</li>
-          <li>Контент, нарушающий нормы морали или законодательства, будет удаляться без предупреждения.</li>
-        </ul>
-      </li>
-
-      <li><strong>Учётная запись:</strong>
-        <ul class="list-disc pl-6 mt-2 space-y-2">
-          <li>Регистрация разрешена только пользователям от 18 лет.</li>
-          <li>Запрещено делиться аккаунтом с третьими лицами или выдавать себя за других.</li>
-          <li>Администрация оставляет за собой право временно или навсегда ограничить доступ при нарушении правил.</li>
-        </ul>
-      </li>
-
-      <li><strong>Виртуальная валюта:</strong> 
-        <ul class="list-disc pl-6 mt-2 space-y-2">
-          <li>Валюта в игре (монеты) является виртуальной и не имеет реальной ценности.</li>
-          <li>Администрация вправе изменять или отключить систему валюты без уведомления.</li>
-        </ul>
-      </li>
-    </ol>
-
-    <div class="text-center mt-10">
-      <a href="index.html" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-full text-lg">Назад на главную</a>
+  <main class="max-w-4xl mx-auto px-6 py-8">
+    <h1 class="text-3xl font-bold mb-6" data-key="rules_title">Правила LibreXChat</h1>
+    <ul id="rulesList" class="list-disc pl-6 space-y-4 text-lg">
+      <!-- Заполняется скриптом -->
+    </ul>
+    <div class="text-center back-button">
+      <a href="index.html" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-full text-white" data-key="back">Назад на главную</a>
     </div>
   </main>
 
-  <footer class="text-center py-6 text-sm text-gray-400">
-    <span>© 2025 LibreXChat. Проект создан для всех без исключения.</span>
-  </footer>
+  <script>
+    const translations = {
+      ru: {
+        nav_news: "Новости",
+        nav_account: "Личный кабинет",
+        nav_rules: "Правила",
+        nav_download: "Скачать",
+        rules_title: "Правила LibreXChat",
+        back: "Назад на главную",
+        rules: [
+          "Любое изменение файлов игры запрещено и ведет к блокировке аккаунта.",
+          "Запрещено обсуждение войны, религии, национальности — это ведет к бану.",
+          "Запрещены преследование, оскорбления, публикация личных данных и фото других пользователей.",
+          "Запрещено использовать баги, сторонние программы, боты или вредоносные скрипты.",
+          "Категорически запрещён спам и массовые однотипные сообщения в чате.",
+          "Модераторы и администрация имеют право принимать меры при нарушении правил.",
+          "Любые ложные жалобы в адрес других пользователей караются блокировкой.",
+          "Вы обязаны самостоятельно соблюдать меры по защите своей личной информации.",
+          "Передача своего аккаунта другим лицам запрещена.",
+          "Запрещено использование чужого контента без разрешения (аватары, фото, тексты и т.д.)."
+        ]
+      },
+      en: {
+        nav_news: "News",
+        nav_account: "Account",
+        nav_rules: "Rules",
+        nav_download: "Download",
+        rules_title: "LibreXChat Rules",
+        back: "Back to Main",
+        rules: [
+          "Modifying game files is strictly prohibited and leads to account ban.",
+          "Discussions about war, religion, or nationality are forbidden and result in ban.",
+          "Harassment, insults, or posting personal data/photos of other users is prohibited.",
+          "Exploiting bugs, using bots or malicious scripts is not allowed.",
+          "Spam or repetitive messages in chat are forbidden.",
+          "Moderators and admins may take actions against rule violations.",
+          "False reports against users will result in a ban.",
+          "You are responsible for protecting your own private information.",
+          "Sharing your account with others is not allowed.",
+          "Using someone else's content (avatars, photos, texts, etc.) without permission is prohibited."
+        ]
+      }
+    };
+
+    let currentLang = localStorage.getItem("lang") || "ru";
+
+    function switchLanguage() {
+      currentLang = currentLang === "ru" ? "en" : "ru";
+      localStorage.setItem("lang", currentLang);
+      applyTranslations();
+    }
+
+    function applyTranslations() {
+      const t = translations[currentLang];
+      document.querySelectorAll("[data-key]").forEach(el => {
+        const key = el.getAttribute("data-key");
+        if (t[key]) el.textContent = t[key];
+      });
+
+      const rulesList = document.getElementById("rulesList");
+      rulesList.innerHTML = "";
+      t.rules.forEach(rule => {
+        const li = document.createElement("li");
+        li.textContent = rule;
+        rulesList.appendChild(li);
+      });
+    }
+
+    window.onload = applyTranslations;
+  </script>
 </body>
 </html>
