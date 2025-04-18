@@ -5,44 +5,51 @@
   <title>Мой профиль — LibreXChat</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <style>
     body {
-      background-color: #0d1117;
-      color: #e6edf3;
-      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: white;
+      font-family: 'Inter', sans-serif;
+      animation: fadeIn 1s ease-in;
     }
-    .section-border {
-      border: 2px solid #3b82f6;
-      border-radius: 8px;
-      padding: 20px;
-      background-color: #161b22;
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
-    .section-border-green {
-      border: 2px solid #22c55e;
-      border-radius: 8px;
+    .section {
+      background: #111827;
+      border: 2px solid #6366f1;
+      border-radius: 1rem;
       padding: 20px;
-      background-color: #161b22;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+    .section:hover {
+      border-color: #8b5cf6;
+      transform: scale(1.02);
     }
     .btn {
-      background-color: #3b82f6;
+      background: #6366f1;
       padding: 10px 20px;
-      border-radius: 6px;
+      border-radius: 8px;
       text-align: center;
       margin-bottom: 10px;
-      transition: background-color 0.3s ease;
+      width: 100%;
+      transition: background 0.3s ease;
     }
     .btn:hover {
-      background-color: #2563eb;
+      background: #7c3aed;
     }
     .btn-red {
-      background-color: #ef4444;
+      background: #ef4444;
       padding: 10px 20px;
-      border-radius: 6px;
+      border-radius: 8px;
+      text-align: center;
       margin-top: 10px;
+      width: 100%;
     }
     .btn-red:hover {
-      background-color: #dc2626;
+      background: #dc2626;
     }
   </style>
 
@@ -50,7 +57,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
-  <!-- Firebase конфиг -->
+  <!-- Firebase конфигурация -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBhmuX9aWec4NjxiSZ1FmqBr7LvioyK1rk",
@@ -69,7 +76,7 @@
 <body class="min-h-screen flex flex-col">
 
   <!-- Навигация -->
-  <nav class="bg-blue-600 p-4 flex justify-between items-center text-sm">
+  <nav class="bg-indigo-700 p-4 flex justify-between items-center text-sm">
     <div class="flex items-center space-x-4">
       <span class="text-white font-bold">LibreXChat | Личный кабинет</span>
       <a href="rules.html" class="hover:underline">Полезные ссылки</a>
@@ -97,19 +104,19 @@
       </div>
 
       <!-- Центральный блок -->
-      <div class="section-border">
-        <p><strong>Email:</strong> <span id="userEmail">Загрузка...</span></p>
+      <div class="section" id="profileData">
+        <p><strong>Email:</strong> Загрузка...</p>
         <p><strong>Счёт:</strong> 0 монет</p>
         <p><strong>Количество персонажей:</strong> 0 шт.</p>
-        <p><strong>Дата регистрации:</strong> <span id="registerDate">Загрузка...</span></p>
-        <p><strong>Время в игре:</strong> 0 ч. 0 мин.</p>
+        <p><strong>Дата регистрации:</strong> Загрузка...</p>
+        <p><strong>Время в игре:</strong> Загрузка...</p>
       </div>
 
       <!-- Правый блок -->
-      <div class="section-border-green flex flex-col">
-        <button class="btn">Сменить Email</button>
-        <button class="btn">Сменить пароль</button>
-        <button class="btn">Восстановление</button>
+      <div class="section flex flex-col space-y-4">
+        <button class="btn" onclick="changeEmail()">Сменить Email</button>
+        <button class="btn" onclick="changePassword()">Сменить пароль</button>
+        <button class="btn" onclick="recoverPassword()">Восстановление</button>
       </div>
 
     </div>
@@ -120,31 +127,75 @@
     © 2025 LibreXChat. Проект создан для всех без исключения. Разработчик: Intriganka и Лосик
   </footer>
 
-  <!-- Логика -->
   <script>
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        document.getElementById('userEmail').textContent = user.email || "Нет данных";
-        const regDate = new Date(user.metadata.creationTime);
-        document.getElementById('registerDate').textContent = regDate.toLocaleDateString('ru-RU');
-      } else {
-        window.location.href = "index.html"; // Если не авторизован
-      }
-    });
+    // Переключение языка
+    function switchLanguage() {
+      alert("Смена языка пока в разработке");
+    }
 
+    // Выход
     function logout() {
       auth.signOut().then(() => {
         window.location.href = "index.html";
       });
     }
 
-    function switchLanguage() {
-      alert('Переключение языка в разработке!');
+    // Загрузка данных пользователя
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        const profileData = document.getElementById('profileData');
+        profileData.innerHTML = `
+          <p><strong>Email:</strong> ${user.email}</p>
+          <p><strong>Счёт:</strong> 0 монет</p>
+          <p><strong>Количество персонажей:</strong> 0 шт.</p>
+          <p><strong>Дата регистрации:</strong> ${new Date(user.metadata.creationTime).toLocaleDateString()}</p>
+          <p><strong>Время в игре:</strong> Загрузка...</p>
+        `;
+      } else {
+        window.location.href = "account.html";
+      }
+    });
+
+    // Смена Email
+    async function changeEmail() {
+      const newEmail = prompt("Введите новый Email:");
+      if (newEmail) {
+        try {
+          await auth.currentUser.updateEmail(newEmail);
+          await auth.currentUser.sendEmailVerification();
+          alert("Email успешно обновлён! Письмо подтверждения отправлено.");
+          location.reload();
+        } catch (error) {
+          alert("Ошибка при смене Email: " + error.message);
+        }
+      }
     }
 
-    window.onload = () => {
-      gsap.from("main", { opacity: 0, y: 50, duration: 1 });
-    };
+    // Смена пароля
+    async function changePassword() {
+      const newPassword = prompt("Введите новый пароль:");
+      if (newPassword) {
+        try {
+          await auth.currentUser.updatePassword(newPassword);
+          alert("Пароль успешно обновлён!");
+        } catch (error) {
+          alert("Ошибка при смене пароля: " + error.message);
+        }
+      }
+    }
+
+    // Восстановление пароля
+    async function recoverPassword() {
+      const email = prompt("Введите ваш Email для восстановления:");
+      if (email) {
+        try {
+          await auth.sendPasswordResetEmail(email);
+          alert("Письмо для восстановления отправлено на Email.");
+        } catch (error) {
+          alert("Ошибка при восстановлении: " + error.message);
+        }
+      }
+    }
   </script>
 
 </body>
