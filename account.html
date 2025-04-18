@@ -28,11 +28,11 @@
     }
   </style>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"></script>
+  <!-- Firebase SDK (совместимая версия) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
-  <!-- Firebase конфиг -->
+  <!-- Firebase конфигурация -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBhmuX9aWec4NjxiSZ1FmqBr7LvioyK1rk",
@@ -66,15 +66,15 @@
     <h1 class="text-3xl font-bold text-center mb-6" data-key="account_title">Личный кабинет</h1>
 
     <div class="form-box">
-      <form id="registerForm">
+      <form id="registerForm" method="POST">
         <div class="mb-4">
           <label class="block mb-2" for="email" data-key="email_label">Email</label>
-          <input class="w-full px-3 py-2 rounded text-black" type="email" id="email" required />
+          <input class="w-full px-3 py-2 rounded text-black" type="email" id="email" name="email" required />
         </div>
 
         <div class="mb-4">
           <label class="block mb-2" for="password" data-key="password_label">Пароль</label>
-          <input class="w-full px-3 py-2 rounded text-black" type="password" id="password" required />
+          <input class="w-full px-3 py-2 rounded text-black" type="password" id="password" name="password" required />
         </div>
 
         <div class="mb-4 flex items-center space-x-2">
@@ -100,11 +100,12 @@
     </div>
   </main>
 
+  <!-- Кнопка переключения языка -->
   <div id="lang-switch">
     <button onclick="switchLanguage()" class="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600">EN / RU</button>
   </div>
 
-  <!-- Подключение скрипта -->
+  <!-- Подключение скрипта управления языком и регистрацией -->
   <script src="account.js"></script>
 
 </body>
