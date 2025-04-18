@@ -1,12 +1,24 @@
 // account.js
 
+// Инициализация Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyBhmuX9aWec4NjxiSZ1FmqBr7LvioyK1rk",
+  authDomain: "librexchat-dba06.firebaseapp.com",
+  projectId: "librexchat-dba06",
+  storageBucket: "librexchat-dba06.appspot.com",
+  messagingSenderId: "48021503169",
+  appId: "1:48021503169:web:fb694c3b1e3416461ae840",
+  measurementId: "G-9K5QGCT108"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
 // Ждём загрузки страницы
 window.addEventListener('DOMContentLoaded', () => {
 
-  // Переключение языка
   applyTranslations();
 
-  // Обработка регистрации
   const registerForm = document.getElementById('registerForm');
   registerForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -23,20 +35,20 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Блокируем кнопку регистрации без галочки
   document.getElementById("acceptRules").addEventListener("change", function () {
     document.getElementById("registerBtn").disabled = !this.checked;
   });
 
 });
 
-// Перевод текста
+// Переключение языка
 function switchLanguage() {
   currentLang = currentLang === "ru" ? "en" : "ru";
   localStorage.setItem("lang", currentLang);
   applyTranslations();
 }
 
+// Перевод текста
 function applyTranslations() {
   const translations = {
     ru: {
@@ -78,6 +90,7 @@ function applyTranslations() {
     const key = el.getAttribute("data-key");
     if (t[key]) el.textContent = t[key];
   });
+
   const footer = document.getElementById("footerText");
   if (footer) footer.textContent = t.footer;
 }
