@@ -1,64 +1,83 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Мой профиль | LibreXChat</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-auth-compat.js"></script>
-  <script src="firebase-config.js"></script>
-  <script type="module" src="profile.js"></script>
+  <meta charset="UTF-8" />
+  <title>Мой профиль — LibreXChat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <style>
     body {
-      background-color: #0a0223;
-      color: white;
-      font-family: sans-serif;
+      background-color: #0d1117;
+      color: #e6edf3;
+      font-family: 'Segoe UI', sans-serif;
     }
     .section-border {
-      border: 2px solid #00ffff;
+      border: 2px solid #3b82f6;
       border-radius: 8px;
       padding: 20px;
+      background-color: #161b22;
     }
     .section-border-green {
-      border: 2px solid #00ff00;
+      border: 2px solid #22c55e;
       border-radius: 8px;
       padding: 20px;
+      background-color: #161b22;
     }
-    .btn-purple {
-      background-color: #6b21a8;
+    .btn {
+      background-color: #3b82f6;
       padding: 10px 20px;
       border-radius: 6px;
       text-align: center;
       margin-bottom: 10px;
+      transition: background-color 0.3s ease;
     }
-    .btn-purple:hover {
-      background-color: #7c3aed;
+    .btn:hover {
+      background-color: #2563eb;
     }
     .btn-red {
-      background-color: #dc2626;
+      background-color: #ef4444;
       padding: 10px 20px;
       border-radius: 6px;
-      text-align: center;
       margin-top: 10px;
     }
     .btn-red:hover {
-      background-color: #ef4444;
+      background-color: #dc2626;
     }
   </style>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+  <!-- Firebase конфиг -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBhmuX9aWec4NjxiSZ1FmqBr7LvioyK1rk",
+      authDomain: "librexchat-dba06.firebaseapp.com",
+      projectId: "librexchat-dba06",
+      storageBucket: "librexchat-dba06.appspot.com",
+      messagingSenderId: "48021503169",
+      appId: "1:48021503169:web:fb694c3b1e3416461ae840",
+      measurementId: "G-9K5QGCT108"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+  </script>
 </head>
+
 <body class="min-h-screen flex flex-col">
 
   <!-- Навигация -->
-  <nav class="bg-purple-700 p-4 flex justify-between items-center text-sm">
+  <nav class="bg-blue-600 p-4 flex justify-between items-center text-sm">
     <div class="flex items-center space-x-4">
       <span class="text-white font-bold">LibreXChat | Личный кабинет</span>
       <a href="rules.html" class="hover:underline">Полезные ссылки</a>
     </div>
     <div class="flex items-center space-x-4">
       <a href="profile.html" class="hover:underline">Профиль</a>
-      <a href="index.html" class="hover:underline">Выйти</a>
-      <button onclick="alert('Смена языка скоро будет доступна!')" class="bg-gray-700 px-2 py-1 rounded hover:bg-gray-600">РУС | ENG</button>
+      <button onclick="logout()" class="hover:underline">Выйти</button>
+      <button onclick="switchLanguage()" class="bg-gray-700 px-2 py-1 rounded hover:bg-gray-600">РУС | ENG</button>
     </div>
   </nav>
 
@@ -70,27 +89,27 @@
 
       <!-- Левый блок -->
       <div class="flex flex-col">
-        <button class="btn-purple">Данные профиля</button>
-        <button class="btn-purple">Персонажи</button>
-        <button class="btn-purple">Мой центр загрузок</button>
-        <button class="btn-purple opacity-50 cursor-not-allowed">Фракция</button>
+        <button class="btn">Данные профиля</button>
+        <button class="btn">Персонажи</button>
+        <button class="btn">Мой центр загрузок</button>
+        <button class="btn opacity-50 cursor-not-allowed">Фракция</button>
         <button class="btn-red">Удаление профиля</button>
       </div>
 
       <!-- Центральный блок -->
-      <div class="section-border" id="profileInfo">
-        <p><strong>Email:</strong> Загрузка...</p>
+      <div class="section-border">
+        <p><strong>Email:</strong> <span id="userEmail">Загрузка...</span></p>
         <p><strong>Счёт:</strong> 0 монет</p>
         <p><strong>Количество персонажей:</strong> 0 шт.</p>
-        <p><strong>Дата регистрации:</strong> Загрузка...</p>
-        <p><strong>Время в игре:</strong> Загрузка...</p>
+        <p><strong>Дата регистрации:</strong> <span id="registerDate">Загрузка...</span></p>
+        <p><strong>Время в игре:</strong> 0 ч. 0 мин.</p>
       </div>
 
       <!-- Правый блок -->
-      <div class="section-border-green">
-        <button class="btn-purple">Сменить Email</button>
-        <button class="btn-purple">Сменить пароль</button>
-        <button class="btn-purple">Восстановление</button>
+      <div class="section-border-green flex flex-col">
+        <button class="btn">Сменить Email</button>
+        <button class="btn">Сменить пароль</button>
+        <button class="btn">Восстановление</button>
       </div>
 
     </div>
@@ -100,6 +119,33 @@
   <footer class="text-center text-gray-400 text-sm py-4">
     © 2025 LibreXChat. Проект создан для всех без исключения. Разработчик: Intriganka и Лосик
   </footer>
+
+  <!-- Логика -->
+  <script>
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        document.getElementById('userEmail').textContent = user.email || "Нет данных";
+        const regDate = new Date(user.metadata.creationTime);
+        document.getElementById('registerDate').textContent = regDate.toLocaleDateString('ru-RU');
+      } else {
+        window.location.href = "index.html"; // Если не авторизован
+      }
+    });
+
+    function logout() {
+      auth.signOut().then(() => {
+        window.location.href = "index.html";
+      });
+    }
+
+    function switchLanguage() {
+      alert('Переключение языка в разработке!');
+    }
+
+    window.onload = () => {
+      gsap.from("main", { opacity: 0, y: 50, duration: 1 });
+    };
+  </script>
 
 </body>
 </html>
