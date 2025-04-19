@@ -65,6 +65,7 @@
 
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
 <script>
 const firebaseConfig = {
   apiKey: "AIzaSyBhmuX9aWec4NjxiSZ1FmqBr7LvioyK1rk",
@@ -95,17 +96,31 @@ auth.onAuthStateChanged(user => {
 });
 
 function changeEmail() {
-  const newEmail = prompt(currentLang === 'ru' ? 'Введите новый Email:' : 'Enter new Email:');
+  const prompts = {
+    ru: 'Введите новый Email:',
+    en: 'Enter new Email:'
+  };
+  const successMessages = {
+    ru: 'Письмо отправлено на новый Email.',
+    en: 'Verification email sent.'
+  };
+
+  const newEmail = prompt(prompts[currentLang]);
   if (newEmail) {
     auth.currentUser.verifyBeforeUpdateEmail(newEmail)
-      .then(() => showInfo(currentLang === 'ru' ? 'Письмо отправлено на новый Email.' : 'Verification email sent.'))
+      .then(() => showInfo(successMessages[currentLang]))
       .catch(error => showInfo(error.message, true));
   }
 }
 
 function changePassword() {
+  const successMessages = {
+    ru: 'Письмо для смены пароля отправлено.',
+    en: 'Password reset email sent.'
+  };
+
   auth.sendPasswordResetEmail(auth.currentUser.email)
-    .then(() => showInfo(currentLang === 'ru' ? 'Письмо для смены пароля отправлено.' : 'Password reset email sent.'))
+    .then(() => showInfo(successMessages[currentLang]))
     .catch(error => showInfo(error.message, true));
 }
 
@@ -118,6 +133,7 @@ function logout() {
 }
 
 let currentLang = localStorage.getItem('lang') || 'ru';
+
 function switchLanguage() {
   currentLang = currentLang === 'ru' ? 'en' : 'ru';
   localStorage.setItem('lang', currentLang);
@@ -126,8 +142,44 @@ function switchLanguage() {
 
 function applyTranslations() {
   const t = {
-    ru: { profile: 'Мой профиль', email: 'Email:', balance: 'Счёт:', characters: 'Количество персонажей:', registration: 'Дата регистрации:', playtime: 'Время в игре:', logout: 'Выход' },
-    en: { profile: 'My Profile', email: 'Email:', balance: 'Balance:', characters: 'Characters:', registration: 'Registration Date:', playtime: 'Playtime:', logout: 'Logout' }
+    ru: {
+      profile: 'Мой профиль',
+      email: 'Email:',
+      balance: 'Счёт:',
+      characters: 'Количество персонажей:',
+      registration: 'Дата регистрации:',
+      playtime: 'Время в игре:',
+      logout: 'Выход',
+      btnProfile: 'Данные профиля',
+      btnCharacters: 'Персонажи',
+      btnUpload: 'Мой центр загрузок',
+      btnFaction: 'Фракция',
+      btnDelete: 'Удаление профиля',
+      btnChangeEmail: 'Сменить Email',
+      btnChangePassword: 'Сменить пароль',
+      btnResetPassword: 'Восстановление',
+      waitingData: 'Ожидание данных...',
+      waitingServer: 'Ожидание сервера...'
+    },
+    en: {
+      profile: 'My Profile',
+      email: 'Email:',
+      balance: 'Balance:',
+      characters: 'Characters:',
+      registration: 'Registration Date:',
+      playtime: 'Playtime:',
+      logout: 'Logout',
+      btnProfile: 'Profile Data',
+      btnCharacters: 'Characters',
+      btnUpload: 'My Upload Center',
+      btnFaction: 'Faction',
+      btnDelete: 'Delete Profile',
+      btnChangeEmail: 'Change Email',
+      btnChangePassword: 'Change Password',
+      btnResetPassword: 'Password Recovery',
+      waitingData: 'Waiting for data...',
+      waitingServer: 'Waiting for server...'
+    }
   }[currentLang];
 
   document.getElementById('profile-title').textContent = t.profile;
@@ -138,14 +190,28 @@ function applyTranslations() {
   document.getElementById('label-playtime').textContent = t.playtime;
   document.getElementById('logout-btn').textContent = t.logout;
 
-  const playtime = document.getElementById('playtime');
-  if (playtime.textContent === 'Ожидание сервера...' || playtime.textContent === 'Waiting for server...') {
-    playtime.textContent = currentLang === 'ru' ? 'Ожидание сервера...' : 'Waiting for server...';
-  }
+  // Кнопки левого блока
+  document.getElementById('btn-profile').textContent = t.btnProfile;
+  document.getElementById('btn-characters').textContent = t.btnCharacters;
+  document.getElementById('btn-upload').textContent = t.btnUpload;
+  document.getElementById('btn-faction').textContent = t.btnFaction;
+  document.getElementById('btn-delete').textContent = t.btnDelete;
 
-  const balance = document.getElementById('balance');
-  if (balance.textContent === 'Ожидание данных...' || balance.textContent === 'Waiting for data...') {
-    balance.textContent = currentLang === 'ru' ? 'Ожидание данных...' : 'Waiting for data...';
+  // Кнопки правого блока
+  const buttons = document.querySelectorAll('.glow-green button');
+  buttons[0].textContent = t.btnChangeEmail;
+  buttons[1].textContent = t.btnChangePassword;
+  buttons[2].textContent = t.btnResetPassword;
+
+  // Подстройка если ещё данные не пришли
+  if (document.getElementById('balance').textContent.includes('Ожидание') || document.getElementById('balance').textContent.includes('Waiting')) {
+    document.getElementById('balance').textContent = t.waitingData;
+  }
+  if (document.getElementById('characters').textContent.includes('Ожидание') || document.getElementById('characters').textContent.includes('Waiting')) {
+    document.getElementById('characters').textContent = t.waitingData;
+  }
+  if (document.getElementById('playtime').textContent.includes('Ожидание') || document.getElementById('playtime').textContent.includes('Waiting')) {
+    document.getElementById('playtime').textContent = t.waitingServer;
   }
 }
 
