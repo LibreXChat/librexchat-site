@@ -15,13 +15,16 @@
     .button-red:hover { background-color: #c62828; }
     .fade-in { animation: fadeIn 0.7s ease-in-out; }
     @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
-    #lang-switch { position: fixed; top: 10px; right: 15px; background: #3f3f46; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+    #lang-switch { position: fixed; bottom: 10px; left: 15px; background: #3f3f46; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+    #logout { position: fixed; top: 10px; right: 15px; background: #e53935; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 14px; transition: background 0.3s; }
+    #logout:hover { background: #c62828; }
     #infoBox { position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 12px; opacity: 0; transition: opacity 0.5s; font-size: 14px; z-index: 9999; }
   </style>
 </head>
 <body class="fade-in">
 
 <div id="lang-switch" onclick="switchLanguage()">RU | EN</div>
+<div id="logout" onclick="logoutUser()">Выход</div>
 <div id="infoBox"></div>
 
 <main class="max-w-7xl mx-auto py-10 px-4">
@@ -64,7 +67,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script>
-const firebaseConfig = {
+const firebaseConfig = { 
   apiKey: "AIzaSyBhmuX9aWec4NjxiSZ1FmqBr7LvioyK1rk",
   authDomain: "librexchat-dba06.firebaseapp.com",
   projectId: "librexchat-dba06",
@@ -83,6 +86,13 @@ function showInfo(message, error = false) {
   setTimeout(() => { infoBox.style.opacity = 0; }, 4000);
 }
 
+function logoutUser() {
+  auth.signOut().then(() => {
+    showInfo('Вы успешно вышли из аккаунта!');
+    setTimeout(() => location.href = 'login.html', 2000);
+  }).catch(error => showInfo('Ошибка выхода: ' + error.message, true));
+}
+
 auth.onAuthStateChanged(user => {
   if (user) {
     document.getElementById('email').textContent = user.email;
@@ -93,19 +103,19 @@ auth.onAuthStateChanged(user => {
 });
 
 function changeEmail() {
-  const newEmail = prompt(currentLang === 'ru' ? 'Введите новый Email:' : 'Enter new Email:');
+  const newEmail = prompt('Введите новый Email:');
   if (newEmail) {
     auth.currentUser.verifyBeforeUpdateEmail(newEmail)
-      .then(() => showInfo(currentLang === 'ru' ? 'Письмо для смены Email отправлено!' : 'Verification email sent!'))
-      .catch(error => showInfo((currentLang === 'ru' ? 'Ошибка: ' : 'Error: ') + error.message, true));
+      .then(() => showInfo('Письмо отправлено на новый email для подтверждения.'))
+      .catch(error => showInfo('Ошибка: ' + error.message, true));
   }
 }
 
 function changePassword() {
   const email = auth.currentUser.email;
   auth.sendPasswordResetEmail(email)
-    .then(() => showInfo(currentLang === 'ru' ? 'Письмо для смены пароля отправлено!' : 'Password reset email sent!'))
-    .catch(error => showInfo((currentLang === 'ru' ? 'Ошибка: ' : 'Error: ') + error.message, true));
+    .then(() => showInfo('Письмо для смены пароля отправлено.'))
+    .catch(error => showInfo('Ошибка: ' + error.message, true));
 }
 
 function resetPassword() {
@@ -121,13 +131,23 @@ function switchLanguage() {
 
 function applyTranslations() {
   const texts = {
-    ru: { profile: 'Мой профиль', email: 'Email:', balance: 'Счёт:', characters: 'Количество персонажей:', registration: 'Дата регистрации:', playtime: 'Время в игре:' },
-    en: { profile: 'My Profile', email: 'Email:', balance: 'Balance:', characters: 'Characters:', registration: 'Registration Date:', playtime: 'Playtime:' }
+    ru: {
+      profile: 'Мой профиль', data: 'Данные профиля', chars: 'Персонажи', upload: 'Мой центр загрузок', faction: 'Фракция', delete: 'Удаление профиля', changeEmail: 'Сменить Email', changePassword: 'Сменить пароль', restore: 'Восстановление', logout: 'Выход', balance: 'Счёт:', characters: 'Количество персонажей:', registration: 'Дата регистрации:', playtime: 'Время в игре:'
+    },
+    en: {
+      profile: 'My Profile', data: 'Profile Data', chars: 'Characters', upload: 'My Upload Center', faction: 'Faction', delete: 'Delete Profile', changeEmail: 'Change Email', changePassword: 'Change Password', restore: 'Recovery', logout: 'Logout', balance: 'Balance:', characters: 'Characters:', registration: 'Registration Date:', playtime: 'Playtime:'
+    }
   };
 
   const t = texts[currentLang];
   document.getElementById('profile-title').textContent = t.profile;
-  document.getElementById('label-email').textContent = t.email;
+  document.getElementById('btn-profile').textContent = t.data;
+  document.getElementById('btn-characters').textContent = t.chars;
+  document.getElementById('btn-upload').textContent = t.upload;
+  document.getElementById('btn-faction').textContent = t.faction;
+  document.getElementById('btn-delete').textContent = t.delete;
+  document.getElementById('logout').textContent = t.logout;
+
   document.getElementById('label-balance').textContent = t.balance;
   document.getElementById('label-characters').textContent = t.characters;
   document.getElementById('label-registration').textContent = t.registration;
