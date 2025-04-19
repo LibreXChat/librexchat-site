@@ -26,6 +26,14 @@
       bottom: 10px;
       left: 15px;
     }
+    .rainbow-text {
+      font-size: 4rem;
+      font-weight: bold;
+      text-align: center;
+      background-image: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
   </style>
 </head>
 <body>
@@ -49,7 +57,7 @@
   </nav>
 
   <header class="text-center py-10">
-    <h1 class="text-4xl font-bold mb-4 rainbow-text">LibreXChat</h1>
+    <h1 class="rainbow-text">LibreXChat</h1>
   </header>
 
   <main class="max-w-3xl mx-auto px-4 py-8 text-center">
