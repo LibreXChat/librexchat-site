@@ -6,18 +6,20 @@
   <title>Мой профиль — LibreXChat</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
-    body { background: #0d0c1d; color: white; font-family: 'Segoe UI', sans-serif; }
-    .glow-box { border: 2px solid #00f0ff; border-radius: 10px; box-shadow: 0 0 15px #00f0ff; padding: 20px; }
-    .glow-green { border: 2px solid #00ff9d; border-radius: 10px; box-shadow: 0 0 15px #00ff9d; padding: 20px; }
-    .button-purple { background: #762ef7; transition: background 0.3s; }
-    .button-purple:hover { background: #5b23bd; }
-    .button-red { background: #e53935; transition: background 0.3s; }
-    .button-red:hover { background: #c62828; }
+    body { background-color: #0d0c1d; color: white; font-family: 'Segoe UI', sans-serif; }
+    .glow-box, .glow-green { border-radius: 10px; padding: 20px; }
+    .glow-box { border: 2px solid #00f0ff; box-shadow: 0 0 15px #00f0ff; }
+    .glow-green { border: 2px solid #00ff9d; box-shadow: 0 0 15px #00ff9d; }
+    .button-purple { background-color: #762ef7; transition: background 0.3s; }
+    .button-purple:hover { background-color: #5b23bd; }
+    .button-red { background-color: #e53935; transition: background 0.3s; }
+    .button-red:hover { background-color: #c62828; }
     .fade-in { animation: fadeIn 0.7s ease-in-out; }
     @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
-    #lang-switch { position: fixed; bottom: 10px; left: 15px; background: #3f3f46; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 14px; }
-    #logout-btn { position: fixed; top: 10px; right: 15px; background: #e53935; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+    #lang-switch { position: fixed; bottom: 10px; left: 15px; background: #3f3f46; padding: 5px 10px; border-radius: 8px; font-size: 14px; cursor: pointer; }
+    #logout-btn { position: fixed; bottom: 10px; right: 15px; background: #3f3f46; padding: 5px 10px; border-radius: 8px; font-size: 14px; cursor: pointer; }
     #infoBox { position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 12px; opacity: 0; transition: opacity 0.5s; font-size: 14px; z-index: 9999; }
+    #logged-in-as { margin-top: 20px; text-align: center; font-size: 14px; color: #ccc; opacity: 0; animation: fadeIn 1s forwards 1s; }
   </style>
 </head>
 <body class="fade-in">
@@ -46,13 +48,14 @@
         <div><strong id="label-registration">Дата регистрации:</strong> <span id="registration">Загрузка...</span></div>
         <div><strong id="label-playtime">Время в игре:</strong> <span id="playtime">Ожидание сервера...</span></div>
       </div>
+      <div id="logged-in-as"></div>
     </div>
 
     <div class="glow-green">
       <div class="space-y-4">
-        <button class="w-full py-3 rounded button-purple" onclick="changeEmail()">Сменить Email</button>
-        <button class="w-full py-3 rounded button-purple" onclick="changePassword()">Сменить пароль</button>
-        <button class="w-full py-3 rounded button-purple" onclick="resetPassword()">Восстановление</button>
+        <button class="w-full py-3 rounded button-purple" onclick="changeEmail()" id="btn-change-email">Сменить Email</button>
+        <button class="w-full py-3 rounded button-purple" onclick="changePassword()" id="btn-change-password">Сменить пароль</button>
+        <button class="w-full py-3 rounded button-purple" onclick="resetPassword()" id="btn-recover">Восстановление</button>
       </div>
     </div>
 
@@ -80,7 +83,7 @@ const auth = firebase.auth();
 function showInfo(message, error = false) {
   const infoBox = document.getElementById('infoBox');
   infoBox.textContent = message;
-  infoBox.style.background = error ? 'rgba(255,0,0,0.8)' : 'rgba(0,128,0,0.8)';
+  infoBox.style.background = error ? 'rgba(255, 0, 0, 0.8)' : 'rgba(0, 128, 0, 0.8)';
   infoBox.style.opacity = 1;
   setTimeout(() => { infoBox.style.opacity = 0; }, 4000);
 }
@@ -88,7 +91,8 @@ function showInfo(message, error = false) {
 auth.onAuthStateChanged(user => {
   if (user) {
     document.getElementById('email').textContent = user.email;
-    document.getElementById('registration').textContent = new Date(user.metadata.creationTime).toLocaleDateString(currentLang === 'ru' ? 'ru-RU' : 'en-US');
+    document.getElementById('registration').textContent = user.metadata.creationTime.split('T')[0];
+    document.getElementById('logged-in-as').textContent = currentLang === 'ru' ? `Вы вошли как ${user.email}` : `Logged in as ${user.email}`;
   } else {
     location.href = 'login.html';
   }
@@ -98,15 +102,16 @@ function changeEmail() {
   const newEmail = prompt(currentLang === 'ru' ? 'Введите новый Email:' : 'Enter new Email:');
   if (newEmail) {
     auth.currentUser.verifyBeforeUpdateEmail(newEmail)
-      .then(() => showInfo(currentLang === 'ru' ? 'Письмо отправлено на новый Email.' : 'Verification email sent.'))
-      .catch(error => showInfo(error.message, true));
+      .then(() => showInfo(currentLang === 'ru' ? 'Письмо отправлено на новый Email.' : 'Confirmation email sent.'))
+      .catch(error => showInfo('Ошибка: ' + error.message, true));
   }
 }
 
 function changePassword() {
-  auth.sendPasswordResetEmail(auth.currentUser.email)
+  const email = auth.currentUser.email;
+  auth.sendPasswordResetEmail(email)
     .then(() => showInfo(currentLang === 'ru' ? 'Письмо для смены пароля отправлено.' : 'Password reset email sent.'))
-    .catch(error => showInfo(error.message, true));
+    .catch(error => showInfo('Ошибка: ' + error.message, true));
 }
 
 function resetPassword() {
@@ -114,7 +119,7 @@ function resetPassword() {
 }
 
 function logout() {
-  auth.signOut().then(() => { location.href = 'login.html'; });
+  auth.signOut().then(() => location.href = 'login.html');
 }
 
 let currentLang = localStorage.getItem('lang') || 'ru';
@@ -125,10 +130,11 @@ function switchLanguage() {
 }
 
 function applyTranslations() {
-  const t = {
-    ru: { profile: 'Мой профиль', email: 'Email:', balance: 'Счёт:', characters: 'Количество персонажей:', registration: 'Дата регистрации:', playtime: 'Время в игре:', logout: 'Выход' },
-    en: { profile: 'My Profile', email: 'Email:', balance: 'Balance:', characters: 'Characters:', registration: 'Registration Date:', playtime: 'Playtime:', logout: 'Logout' }
-  }[currentLang];
+  const texts = {
+    ru: { profile: 'Мой профиль', email: 'Email:', balance: 'Счёт:', characters: 'Количество персонажей:', registration: 'Дата регистрации:', playtime: 'Время в игре:', logout: 'Выход', recover: 'Восстановление' },
+    en: { profile: 'My Profile', email: 'Email:', balance: 'Balance:', characters: 'Characters:', registration: 'Registration Date:', playtime: 'Playtime:', logout: 'Logout', recover: 'Recovery' }
+  };
+  const t = texts[currentLang];
 
   document.getElementById('profile-title').textContent = t.profile;
   document.getElementById('label-email').textContent = t.email;
@@ -137,16 +143,9 @@ function applyTranslations() {
   document.getElementById('label-registration').textContent = t.registration;
   document.getElementById('label-playtime').textContent = t.playtime;
   document.getElementById('logout-btn').textContent = t.logout;
-
-  const playtime = document.getElementById('playtime');
-  if (playtime.textContent === 'Ожидание сервера...' || playtime.textContent === 'Waiting for server...') {
-    playtime.textContent = currentLang === 'ru' ? 'Ожидание сервера...' : 'Waiting for server...';
-  }
-
-  const balance = document.getElementById('balance');
-  if (balance.textContent === 'Ожидание данных...' || balance.textContent === 'Waiting for data...') {
-    balance.textContent = currentLang === 'ru' ? 'Ожидание данных...' : 'Waiting for data...';
-  }
+  document.getElementById('btn-recover').textContent = t.recover;
+  const user = auth.currentUser;
+  if (user) document.getElementById('logged-in-as').textContent = currentLang === 'ru' ? `Вы вошли как ${user.email}` : `Logged in as ${user.email}`;
 }
 
 applyTranslations();
