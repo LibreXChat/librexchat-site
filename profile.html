@@ -6,25 +6,25 @@
   <title>Мой профиль — LibreXChat</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
-    body { background-color: #0d0c1d; color: white; font-family: 'Segoe UI', sans-serif; }
+    body { background: #0d0c1d; color: white; font-family: 'Segoe UI', sans-serif; }
     .glow-box { border: 2px solid #00f0ff; border-radius: 10px; box-shadow: 0 0 15px #00f0ff; padding: 20px; }
     .glow-green { border: 2px solid #00ff9d; border-radius: 10px; box-shadow: 0 0 15px #00ff9d; padding: 20px; }
-    .button-purple { background-color: #762ef7; transition: background 0.3s; }
-    .button-purple:hover { background-color: #5b23bd; }
-    .button-red { background-color: #e53935; transition: background 0.3s; }
-    .button-red:hover { background-color: #c62828; }
-    #lang-switch { position: fixed; bottom: 10px; left: 15px; background: #3f3f46; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 14px; }
-    #logout-btn { position: fixed; top: 10px; right: 15px; background: #e53935; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+    .button-purple { background: #762ef7; transition: background 0.3s; }
+    .button-purple:hover { background: #5b23bd; }
+    .button-red { background: #e53935; transition: background 0.3s; }
+    .button-red:hover { background: #c62828; }
+    .fade-in { animation: fadeIn 0.7s ease-in-out; }
+    @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+    #lang-switch { position: fixed; bottom: 10px; left: 15px; background: #3f3f46; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+    #logout-btn { position: fixed; top: 10px; right: 15px; background: #e53935; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 14px; }
     #infoBox { position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 12px; opacity: 0; transition: opacity 0.5s; font-size: 14px; z-index: 9999; }
-    .fade-in { animation: fadeIn 1s ease-in-out; }
-    @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
   </style>
 </head>
 <body class="fade-in">
 
-<div id="infoBox"></div>
 <div id="lang-switch" onclick="switchLanguage()">RU | EN</div>
-<div id="logout-btn" onclick="logout()">Выйти</div>
+<div id="logout-btn" onclick="logout()">Выход</div>
+<div id="infoBox"></div>
 
 <main class="max-w-7xl mx-auto py-10 px-4">
   <h1 class="text-4xl font-bold text-center mb-10" id="profile-title">Мой профиль</h1>
@@ -40,10 +40,10 @@
 
     <div class="glow-box">
       <div class="space-y-3 text-lg">
-        <div><strong id="label-email">Email:</strong> <span id="email">...</span></div>
+        <div><strong id="label-email">Email:</strong> <span id="email">Загрузка...</span></div>
         <div><strong id="label-balance">Счёт:</strong> <span id="balance">Ожидание данных...</span></div>
-        <div><strong id="label-characters">Персонажи:</strong> <span id="characters">Ожидание данных...</span></div>
-        <div><strong id="label-registration">Дата регистрации:</strong> <span id="registration">...</span></div>
+        <div><strong id="label-characters">Количество персонажей:</strong> <span id="characters">Ожидание данных...</span></div>
+        <div><strong id="label-registration">Дата регистрации:</strong> <span id="registration">Загрузка...</span></div>
         <div><strong id="label-playtime">Время в игре:</strong> <span id="playtime">Ожидание сервера...</span></div>
       </div>
     </div>
@@ -66,48 +66,55 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script>
-const firebaseConfig = { /* ТВОЙ КОНФИГ */ };
+const firebaseConfig = {
+  apiKey: "AIzaSyBhmuX9aWec4NjxiSZ1FmqBr7LvioyK1rk",
+  authDomain: "librexchat-dba06.firebaseapp.com",
+  projectId: "librexchat-dba06",
+  storageBucket: "librexchat-dba06.appspot.com",
+  messagingSenderId: "48021503169",
+  appId: "1:48021503169:web:fb694c3b1e3416461ae840"
+};
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
 function showInfo(message, error = false) {
-  const box = document.getElementById('infoBox');
-  box.textContent = message;
-  box.style.background = error ? 'rgba(255,0,0,0.8)' : 'rgba(0,128,0,0.8)';
-  box.style.opacity = 1;
-  setTimeout(() => box.style.opacity = 0, 4000);
-}
-
-function logout() {
-  auth.signOut().then(() => { window.location.href = 'login.html'; });
+  const infoBox = document.getElementById('infoBox');
+  infoBox.textContent = message;
+  infoBox.style.background = error ? 'rgba(255,0,0,0.8)' : 'rgba(0,128,0,0.8)';
+  infoBox.style.opacity = 1;
+  setTimeout(() => { infoBox.style.opacity = 0; }, 4000);
 }
 
 auth.onAuthStateChanged(user => {
   if (user) {
-    document.getElementById('email').textContent = user.email || 'Нет данных';
-    document.getElementById('registration').textContent = user.metadata?.creationTime.split('T')[0] || 'Нет данных';
+    document.getElementById('email').textContent = user.email;
+    document.getElementById('registration').textContent = new Date(user.metadata.creationTime).toLocaleDateString(currentLang === 'ru' ? 'ru-RU' : 'en-US');
   } else {
-    window.location.href = 'login.html';
+    location.href = 'login.html';
   }
 });
 
 function changeEmail() {
-  const newEmail = prompt('Введите новый Email:');
+  const newEmail = prompt(currentLang === 'ru' ? 'Введите новый Email:' : 'Enter new Email:');
   if (newEmail) {
     auth.currentUser.verifyBeforeUpdateEmail(newEmail)
-      .then(() => showInfo('Письмо отправлено для подтверждения нового email.'))
-      .catch(e => showInfo('Ошибка: ' + e.message, true));
+      .then(() => showInfo(currentLang === 'ru' ? 'Письмо отправлено на новый Email.' : 'Verification email sent.'))
+      .catch(error => showInfo(error.message, true));
   }
 }
 
 function changePassword() {
   auth.sendPasswordResetEmail(auth.currentUser.email)
-    .then(() => showInfo('Письмо для смены пароля отправлено.'))
-    .catch(e => showInfo('Ошибка: ' + e.message, true));
+    .then(() => showInfo(currentLang === 'ru' ? 'Письмо для смены пароля отправлено.' : 'Password reset email sent.'))
+    .catch(error => showInfo(error.message, true));
 }
 
 function resetPassword() {
   changePassword();
+}
+
+function logout() {
+  auth.signOut().then(() => { location.href = 'login.html'; });
 }
 
 let currentLang = localStorage.getItem('lang') || 'ru';
@@ -119,18 +126,27 @@ function switchLanguage() {
 
 function applyTranslations() {
   const t = {
-    ru: { profile: 'Мой профиль', email: 'Email:', balance: 'Счёт:', characters: 'Персонажи:', registration: 'Дата регистрации:', playtime: 'Время в игре:' },
-    en: { profile: 'My Profile', email: 'Email:', balance: 'Balance:', characters: 'Characters:', registration: 'Registration Date:', playtime: 'Playtime:' }
-  };
+    ru: { profile: 'Мой профиль', email: 'Email:', balance: 'Счёт:', characters: 'Количество персонажей:', registration: 'Дата регистрации:', playtime: 'Время в игре:', logout: 'Выход' },
+    en: { profile: 'My Profile', email: 'Email:', balance: 'Balance:', characters: 'Characters:', registration: 'Registration Date:', playtime: 'Playtime:', logout: 'Logout' }
+  }[currentLang];
 
-  const lang = t[currentLang];
+  document.getElementById('profile-title').textContent = t.profile;
+  document.getElementById('label-email').textContent = t.email;
+  document.getElementById('label-balance').textContent = t.balance;
+  document.getElementById('label-characters').textContent = t.characters;
+  document.getElementById('label-registration').textContent = t.registration;
+  document.getElementById('label-playtime').textContent = t.playtime;
+  document.getElementById('logout-btn').textContent = t.logout;
 
-  document.getElementById('profile-title').textContent = lang.profile;
-  document.getElementById('label-email').textContent = lang.email;
-  document.getElementById('label-balance').textContent = lang.balance;
-  document.getElementById('label-characters').textContent = lang.characters;
-  document.getElementById('label-registration').textContent = lang.registration;
-  document.getElementById('label-playtime').textContent = lang.playtime;
+  const playtime = document.getElementById('playtime');
+  if (playtime.textContent === 'Ожидание сервера...' || playtime.textContent === 'Waiting for server...') {
+    playtime.textContent = currentLang === 'ru' ? 'Ожидание сервера...' : 'Waiting for server...';
+  }
+
+  const balance = document.getElementById('balance');
+  if (balance.textContent === 'Ожидание данных...' || balance.textContent === 'Waiting for data...') {
+    balance.textContent = currentLang === 'ru' ? 'Ожидание данных...' : 'Waiting for data...';
+  }
 }
 
 applyTranslations();
