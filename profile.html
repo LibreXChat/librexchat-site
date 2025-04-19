@@ -26,6 +26,20 @@
 <div id="logout-btn" onclick="logout()">Выход</div>
 <div id="infoBox"></div>
 
+<!-- Модалка удаления профиля -->
+<div id="delete-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+  <div class="bg-gray-800 p-8 rounded-xl w-full max-w-md space-y-4">
+    <h2 class="text-2xl font-bold text-center" id="delete-modal-title">Удаление профиля</h2>
+    <input type="email" id="delete-email" placeholder="Email" class="w-full p-2 rounded bg-gray-700 text-white">
+    <input type="password" id="delete-password" placeholder="Пароль" class="w-full p-2 rounded bg-gray-700 text-white">
+    <input type="password" id="delete-password-confirm" placeholder="Подтвердите пароль" class="w-full p-2 rounded bg-gray-700 text-white">
+    <div class="flex justify-between space-x-4 pt-2">
+      <button onclick="confirmDeleteProfile()" class="flex-1 py-2 rounded button-red">Удалить</button>
+      <button onclick="closeDeleteModal()" class="flex-1 py-2 rounded button-purple">Отмена</button>
+    </div>
+  </div>
+</div>
+
 <main class="max-w-7xl mx-auto py-10 px-4">
   <h1 class="text-4xl font-bold text-center mb-10" id="profile-title">Мой профиль</h1>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -96,15 +110,8 @@ auth.onAuthStateChanged(user => {
 });
 
 function changeEmail() {
-  const prompts = {
-    ru: 'Введите новый Email:',
-    en: 'Enter new Email:'
-  };
-  const successMessages = {
-    ru: 'Письмо отправлено на новый Email.',
-    en: 'Verification email sent.'
-  };
-
+  const prompts = { ru: 'Введите новый Email:', en: 'Enter new Email:' };
+  const successMessages = { ru: 'Письмо отправлено на новый Email.', en: 'Verification email sent.' };
   const newEmail = prompt(prompts[currentLang]);
   if (newEmail) {
     auth.currentUser.verifyBeforeUpdateEmail(newEmail)
@@ -114,19 +121,13 @@ function changeEmail() {
 }
 
 function changePassword() {
-  const successMessages = {
-    ru: 'Письмо для смены пароля отправлено.',
-    en: 'Password reset email sent.'
-  };
-
+  const successMessages = { ru: 'Письмо для смены пароля отправлено.', en: 'Password reset email sent.' };
   auth.sendPasswordResetEmail(auth.currentUser.email)
     .then(() => showInfo(successMessages[currentLang]))
     .catch(error => showInfo(error.message, true));
 }
 
-function resetPassword() {
-  changePassword();
-}
+function resetPassword() { changePassword(); }
 
 function logout() {
   auth.signOut().then(() => { location.href = 'login.html'; });
@@ -142,44 +143,8 @@ function switchLanguage() {
 
 function applyTranslations() {
   const t = {
-    ru: {
-      profile: 'Мой профиль',
-      email: 'Email:',
-      balance: 'Счёт:',
-      characters: 'Количество персонажей:',
-      registration: 'Дата регистрации:',
-      playtime: 'Время в игре:',
-      logout: 'Выход',
-      btnProfile: 'Данные профиля',
-      btnCharacters: 'Персонажи',
-      btnUpload: 'Мой центр загрузок',
-      btnFaction: 'Фракция',
-      btnDelete: 'Удаление профиля',
-      btnChangeEmail: 'Сменить Email',
-      btnChangePassword: 'Сменить пароль',
-      btnResetPassword: 'Восстановление',
-      waitingData: 'Ожидание данных...',
-      waitingServer: 'Ожидание сервера...'
-    },
-    en: {
-      profile: 'My Profile',
-      email: 'Email:',
-      balance: 'Balance:',
-      characters: 'Characters:',
-      registration: 'Registration Date:',
-      playtime: 'Playtime:',
-      logout: 'Logout',
-      btnProfile: 'Profile Data',
-      btnCharacters: 'Characters',
-      btnUpload: 'My Upload Center',
-      btnFaction: 'Faction',
-      btnDelete: 'Delete Profile',
-      btnChangeEmail: 'Change Email',
-      btnChangePassword: 'Change Password',
-      btnResetPassword: 'Password Recovery',
-      waitingData: 'Waiting for data...',
-      waitingServer: 'Waiting for server...'
-    }
+    ru: { profile: 'Мой профиль', email: 'Email:', balance: 'Счёт:', characters: 'Количество персонажей:', registration: 'Дата регистрации:', playtime: 'Время в игре:', logout: 'Выход', btnProfile: 'Данные профиля', btnCharacters: 'Персонажи', btnUpload: 'Мой центр загрузок', btnFaction: 'Фракция', btnDelete: 'Удаление профиля', btnChangeEmail: 'Сменить Email', btnChangePassword: 'Сменить пароль', btnResetPassword: 'Восстановление', waitingData: 'Ожидание данных...', waitingServer: 'Ожидание сервера...' },
+    en: { profile: 'My Profile', email: 'Email:', balance: 'Balance:', characters: 'Characters:', registration: 'Registration Date:', playtime: 'Playtime:', logout: 'Logout', btnProfile: 'Profile Data', btnCharacters: 'Characters', btnUpload: 'My Upload Center', btnFaction: 'Faction', btnDelete: 'Delete Profile', btnChangeEmail: 'Change Email', btnChangePassword: 'Change Password', btnResetPassword: 'Password Recovery', waitingData: 'Waiting for data...', waitingServer: 'Waiting for server...' }
   }[currentLang];
 
   document.getElementById('profile-title').textContent = t.profile;
@@ -189,33 +154,48 @@ function applyTranslations() {
   document.getElementById('label-registration').textContent = t.registration;
   document.getElementById('label-playtime').textContent = t.playtime;
   document.getElementById('logout-btn').textContent = t.logout;
-
-  // Кнопки левого блока
   document.getElementById('btn-profile').textContent = t.btnProfile;
   document.getElementById('btn-characters').textContent = t.btnCharacters;
   document.getElementById('btn-upload').textContent = t.btnUpload;
   document.getElementById('btn-faction').textContent = t.btnFaction;
   document.getElementById('btn-delete').textContent = t.btnDelete;
-
-  // Кнопки правого блока
   const buttons = document.querySelectorAll('.glow-green button');
   buttons[0].textContent = t.btnChangeEmail;
   buttons[1].textContent = t.btnChangePassword;
   buttons[2].textContent = t.btnResetPassword;
-
-  // Подстройка если ещё данные не пришли
-  if (document.getElementById('balance').textContent.includes('Ожидание') || document.getElementById('balance').textContent.includes('Waiting')) {
-    document.getElementById('balance').textContent = t.waitingData;
-  }
-  if (document.getElementById('characters').textContent.includes('Ожидание') || document.getElementById('characters').textContent.includes('Waiting')) {
-    document.getElementById('characters').textContent = t.waitingData;
-  }
-  if (document.getElementById('playtime').textContent.includes('Ожидание') || document.getElementById('playtime').textContent.includes('Waiting')) {
-    document.getElementById('playtime').textContent = t.waitingServer;
-  }
+  if (document.getElementById('balance').textContent.includes('Ожидание') || document.getElementById('balance').textContent.includes('Waiting')) document.getElementById('balance').textContent = t.waitingData;
+  if (document.getElementById('characters').textContent.includes('Ожидание') || document.getElementById('characters').textContent.includes('Waiting')) document.getElementById('characters').textContent = t.waitingData;
+  if (document.getElementById('playtime').textContent.includes('Ожидание') || document.getElementById('playtime').textContent.includes('Waiting')) document.getElementById('playtime').textContent = t.waitingServer;
 }
 
 applyTranslations();
+
+function openDeleteModal() { document.getElementById('delete-modal').classList.remove('hidden'); }
+function closeDeleteModal() { document.getElementById('delete-modal').classList.add('hidden'); }
+
+function confirmDeleteProfile() {
+  const email = document.getElementById('delete-email').value.trim();
+  const password = document.getElementById('delete-password').value;
+  const passwordConfirm = document.getElementById('delete-password-confirm').value;
+  if (!email || !password || !passwordConfirm) {
+    showInfo(currentLang === 'ru' ? 'Пожалуйста, заполните все поля.' : 'Please fill in all fields.', true);
+    return;
+  }
+  if (password !== passwordConfirm) {
+    showInfo(currentLang === 'ru' ? 'Пароли не совпадают.' : 'Passwords do not match.', true);
+    return;
+  }
+  const credential = firebase.auth.EmailAuthProvider.credential(email, password);
+  auth.currentUser.reauthenticateWithCredential(credential)
+    .then(() => auth.currentUser.delete()
+      .then(() => {
+        showInfo(currentLang === 'ru' ? 'Профиль удалён.' : 'Profile deleted.');
+        setTimeout(() => { location.href = 'index.html'; }, 2000);
+      })
+      .catch(error => showInfo(error.message, true)))
+    .catch(error => showInfo(error.message, true));
+}
+document.getElementById('btn-delete').onclick = openDeleteModal;
 </script>
 
 </body>
