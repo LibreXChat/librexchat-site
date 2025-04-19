@@ -14,9 +14,11 @@
     #developer {
       position: fixed;
       bottom: 10px;
-      right: 15px;
-      font-size: 14px;
+      right: 50%;
+      transform: translateX(50%);
+      font-size: 16px;
       font-weight: bold;
+      font-style: italic;
       color: #ffffffcc;
     }
     #lang-switch {
@@ -59,7 +61,7 @@
     <p data-key="footerText">© 2025 LibreXChat. Проект создан для всех без исключения.</p>
   </footer>
 
-  <div id="developer">Разработчик: ДЕВОЧКА С ХАРАКТЕРОМ И ЛОСИК</div>
+  <div id="developer">Разработчик: Девочка с Характером И ЛОСИК</div>
 
   <div id="lang-switch">
     <button onclick="switchLanguage()" class="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600">EN / RU</button>
@@ -124,8 +126,8 @@
     }
 
     window.onload = () => {
-      switchLanguage(); // переключает
-      switchLanguage(); // возвращает на ru
+      switchLanguage();
+      switchLanguage();
     };
   </script>
 </body>
