@@ -64,7 +64,14 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script>
-const firebaseConfig = { /* твой конфиг */ };
+const firebaseConfig = {
+  apiKey: "AIzaSyBhmuX9aWec4NjxiSZ1FmqBr7LvioyK1rk",
+  authDomain: "librexchat-dba06.firebaseapp.com",
+  projectId: "librexchat-dba06",
+  storageBucket: "librexchat-dba06.appspot.com",
+  messagingSenderId: "48021503169",
+  appId: "1:48021503169:web:fb694c3b1e3416461ae840"
+};
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
@@ -86,19 +93,19 @@ auth.onAuthStateChanged(user => {
 });
 
 function changeEmail() {
-  const newEmail = prompt('Введите новый Email:');
+  const newEmail = prompt(currentLang === 'ru' ? 'Введите новый Email:' : 'Enter new Email:');
   if (newEmail) {
     auth.currentUser.verifyBeforeUpdateEmail(newEmail)
-      .then(() => showInfo('Письмо отправлено на новый email для подтверждения.'))
-      .catch(error => showInfo('Ошибка: ' + error.message, true));
+      .then(() => showInfo(currentLang === 'ru' ? 'Письмо для смены Email отправлено!' : 'Verification email sent!'))
+      .catch(error => showInfo((currentLang === 'ru' ? 'Ошибка: ' : 'Error: ') + error.message, true));
   }
 }
 
 function changePassword() {
   const email = auth.currentUser.email;
   auth.sendPasswordResetEmail(email)
-    .then(() => showInfo('Письмо для смены пароля отправлено.'))
-    .catch(error => showInfo('Ошибка: ' + error.message, true));
+    .then(() => showInfo(currentLang === 'ru' ? 'Письмо для смены пароля отправлено!' : 'Password reset email sent!'))
+    .catch(error => showInfo((currentLang === 'ru' ? 'Ошибка: ' : 'Error: ') + error.message, true));
 }
 
 function resetPassword() {
