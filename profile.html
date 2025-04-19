@@ -55,21 +55,35 @@
       font-size: 14px;
       cursor: pointer;
     }
+    #infoBox {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 12px;
+      opacity: 0;
+      transition: opacity 0.5s;
+      font-size: 14px;
+      z-index: 9999;
+    }
   </style>
 </head>
 <body class="fade-in">
 
 <div id="lang-switch" onclick="switchLanguage()">RU | EN</div>
+<div id="infoBox"></div>
 
 <main class="max-w-7xl mx-auto py-10 px-4">
-  <h1 class="text-4xl font-bold text-center mb-10">Мой профиль</h1>
+  <h1 class="text-4xl font-bold text-center mb-10" id="profileTitle">Мой профиль</h1>
   
   <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
     <!-- Левая панель -->
     <div class="space-y-4">
-      <button class="w-full py-3 rounded button-purple">Данные профиля</button>
-      <button class="w-full py-3 rounded button-purple">Персонажи</button>
-      <button class="w-full py-3 rounded button-purple">Мой центр загрузок</button>
+      <button id="profileDataBtn" class="w-full py-3 rounded button-purple">Данные профиля</button>
+      <button id="profileCharsBtn" class="w-full py-3 rounded button-purple">Персонажи</button>
+      <button id="profileUploadBtn" class="w-full py-3 rounded button-purple">Мой центр загрузок</button>
       <button class="w-full py-3 rounded bg-purple-800 cursor-not-allowed">Фракция</button>
       <button class="w-full py-3 rounded button-red">Удаление профиля</button>
     </div>
@@ -88,9 +102,9 @@
     <!-- Правая панель -->
     <div class="glow-green">
       <div class="space-y-4">
-        <button class="w-full py-3 rounded button-purple">Сменить Email</button>
-        <button class="w-full py-3 rounded button-purple">Сменить пароль</button>
-        <button class="w-full py-3 rounded button-purple">Восстановление</button>
+        <button id="changeEmailBtn" class="w-full py-3 rounded button-purple">Сменить Email</button>
+        <button id="changePasswordBtn" class="w-full py-3 rounded button-purple">Сменить пароль</button>
+        <button id="recoveryBtn" class="w-full py-3 rounded button-purple">Восстановление</button>
       </div>
     </div>
   </div>
@@ -100,7 +114,7 @@
   </div>
 </main>
 
-<!-- Firebase + Языковой переключатель -->
+<!-- Firebase + Скрипты -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script>
@@ -121,6 +135,53 @@
       document.getElementById('registration').textContent = user.metadata.creationTime.split('T')[0];
     } else {
       location.href = 'login.html';
+    }
+  });
+
+  const infoBox = document.getElementById('infoBox');
+
+  function showNotification(message, color = "#00f0ff") {
+    infoBox.style.backgroundColor = color;
+    infoBox.textContent = message;
+    infoBox.style.opacity = "1";
+    setTimeout(() => {
+      infoBox.style.opacity = "0";
+    }, 3000);
+  }
+
+  document.getElementById('changeEmailBtn').addEventListener('click', async () => {
+    const newEmail = prompt('Введите новый Email:');
+    if (newEmail) {
+      try {
+        await auth.currentUser.updateEmail(newEmail);
+        await auth.currentUser.sendEmailVerification();
+        showNotification('Email изменён! Проверьте новый Email.', '#00ff9d');
+        document.getElementById('email').textContent = newEmail;
+      } catch (error) {
+        showNotification('Ошибка: ' + error.message, '#e53935');
+      }
+    }
+  });
+
+  document.getElementById('changePasswordBtn').addEventListener('click', async () => {
+    const newPassword = prompt('Введите новый пароль:');
+    if (newPassword) {
+      try {
+        await auth.currentUser.updatePassword(newPassword);
+        showNotification('Пароль изменён!', '#00ff9d');
+      } catch (error) {
+        showNotification('Ошибка: ' + error.message, '#e53935');
+      }
+    }
+  });
+
+  document.getElementById('recoveryBtn').addEventListener('click', async () => {
+    try {
+      const email = auth.currentUser.email;
+      await auth.sendPasswordResetEmail(email);
+      showNotification('Письмо для восстановления отправлено!', '#00ff9d');
+    } catch (error) {
+      showNotification('Ошибка: ' + error.message, '#e53935');
     }
   });
 
@@ -157,18 +218,15 @@
         restore: 'Recovery'
       }
     };
-
     const t = texts[currentLang];
 
-    document.querySelector('h1').textContent = t.profile;
-    document.querySelectorAll('.space-y-4 button')[0].textContent = t.data;
-    document.querySelectorAll('.space-y-4 button')[1].textContent = t.chars;
-    document.querySelectorAll('.space-y-4 button')[2].textContent = t.upload;
-    document.querySelectorAll('.space-y-4 button')[3].textContent = t.faction;
-    document.querySelectorAll('.space-y-4 button')[4].textContent = t.delete;
-    document.querySelectorAll('.glow-green button')[0].textContent = t.changeEmail;
-    document.querySelectorAll('.glow-green button')[1].textContent = t.changePassword;
-    document.querySelectorAll('.glow-green button')[2].textContent = t.restore;
+    document.getElementById('profileTitle').textContent = t.profile;
+    document.getElementById('profileDataBtn').textContent = t.data;
+    document.getElementById('profileCharsBtn').textContent = t.chars;
+    document.getElementById('profileUploadBtn').textContent = t.upload;
+    document.getElementById('changeEmailBtn').textContent = t.changeEmail;
+    document.getElementById('changePasswordBtn').textContent = t.changePassword;
+    document.getElementById('recoveryBtn').textContent = t.restore;
   }
 
   applyTranslations();
