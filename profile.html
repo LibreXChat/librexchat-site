@@ -6,68 +6,17 @@
   <title>Мой профиль — LibreXChat</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
-    body {
-      background-color: #0d0c1d;
-      color: white;
-      font-family: 'Segoe UI', sans-serif;
-    }
-    .glow-box {
-      border: 2px solid #00f0ff;
-      border-radius: 10px;
-      box-shadow: 0 0 15px #00f0ff;
-      padding: 20px;
-    }
-    .glow-green {
-      border: 2px solid #00ff9d;
-      box-shadow: 0 0 15px #00ff9d;
-      border-radius: 10px;
-      padding: 20px;
-    }
-    .button-purple {
-      background-color: #762ef7;
-      transition: background 0.3s;
-    }
-    .button-purple:hover {
-      background-color: #5b23bd;
-    }
-    .button-red {
-      background-color: #e53935;
-      transition: background 0.3s;
-    }
-    .button-red:hover {
-      background-color: #c62828;
-    }
-    .fade-in {
-      animation: fadeIn 0.7s ease-in-out;
-    }
-    @keyframes fadeIn {
-      0% { opacity: 0; }
-      100% { opacity: 1; }
-    }
-    #lang-switch {
-      position: fixed;
-      top: 10px;
-      right: 15px;
-      background-color: #3f3f46;
-      color: white;
-      padding: 5px 10px;
-      border-radius: 8px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    #infoBox {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: rgba(0,0,0,0.8);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 12px;
-      opacity: 0;
-      transition: opacity 0.5s;
-      font-size: 14px;
-      z-index: 9999;
-    }
+    body { background-color: #0d0c1d; color: white; font-family: 'Segoe UI', sans-serif; }
+    .glow-box { border: 2px solid #00f0ff; border-radius: 10px; box-shadow: 0 0 15px #00f0ff; padding: 20px; }
+    .glow-green { border: 2px solid #00ff9d; box-shadow: 0 0 15px #00ff9d; border-radius: 10px; padding: 20px; }
+    .button-purple { background-color: #762ef7; transition: background 0.3s; }
+    .button-purple:hover { background-color: #5b23bd; }
+    .button-red { background-color: #e53935; transition: background 0.3s; }
+    .button-red:hover { background-color: #c62828; }
+    .fade-in { animation: fadeIn 0.7s ease-in-out; }
+    @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+    #lang-switch { position: fixed; top: 10px; right: 15px; background: #3f3f46; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+    #infoBox { position: fixed; top: 20px; right: 20px; background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 12px; opacity: 0; transition: opacity 0.5s; font-size: 14px; z-index: 9999; }
   </style>
 </head>
 <body class="fade-in">
@@ -76,37 +25,35 @@
 <div id="infoBox"></div>
 
 <main class="max-w-7xl mx-auto py-10 px-4">
-  <h1 class="text-4xl font-bold text-center mb-10" id="profileTitle">Мой профиль</h1>
-  
+  <h1 class="text-4xl font-bold text-center mb-10" id="profile-title">Мой профиль</h1>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-    <!-- Левая панель -->
+
     <div class="space-y-4">
-      <button id="profileDataBtn" class="w-full py-3 rounded button-purple">Данные профиля</button>
-      <button id="profileCharsBtn" class="w-full py-3 rounded button-purple">Персонажи</button>
-      <button id="profileUploadBtn" class="w-full py-3 rounded button-purple">Мой центр загрузок</button>
-      <button class="w-full py-3 rounded bg-purple-800 cursor-not-allowed">Фракция</button>
-      <button class="w-full py-3 rounded button-red">Удаление профиля</button>
+      <button class="w-full py-3 rounded button-purple" id="btn-profile">Данные профиля</button>
+      <button class="w-full py-3 rounded button-purple" id="btn-characters">Персонажи</button>
+      <button class="w-full py-3 rounded button-purple" id="btn-upload">Мой центр загрузок</button>
+      <button class="w-full py-3 rounded bg-purple-800 cursor-not-allowed" id="btn-faction">Фракция</button>
+      <button class="w-full py-3 rounded button-red" id="btn-delete">Удаление профиля</button>
     </div>
 
-    <!-- Центр -->
     <div class="glow-box">
       <div class="space-y-3 text-lg">
-        <div><strong>Email:</strong> <span id="email">Загрузка...</span></div>
-        <div><strong>Счёт:</strong> <span id="balance">Ожидание данных...</span></div>
-        <div><strong>Количество персонажей:</strong> <span id="characters">Ожидание данных...</span></div>
-        <div><strong>Дата регистрации:</strong> <span id="registration">Загрузка...</span></div>
-        <div><strong>Время в игре:</strong> <span id="playtime">Ожидание сервера...</span></div>
+        <div><strong id="label-email">Email:</strong> <span id="email">Загрузка...</span></div>
+        <div><strong id="label-balance">Счёт:</strong> <span id="balance">Ожидание данных...</span></div>
+        <div><strong id="label-characters">Количество персонажей:</strong> <span id="characters">Ожидание данных...</span></div>
+        <div><strong id="label-registration">Дата регистрации:</strong> <span id="registration">Загрузка...</span></div>
+        <div><strong id="label-playtime">Время в игре:</strong> <span id="playtime">Ожидание сервера...</span></div>
       </div>
     </div>
 
-    <!-- Правая панель -->
     <div class="glow-green">
       <div class="space-y-4">
-        <button id="changeEmailBtn" class="w-full py-3 rounded button-purple">Сменить Email</button>
-        <button id="changePasswordBtn" class="w-full py-3 rounded button-purple">Сменить пароль</button>
-        <button id="recoveryBtn" class="w-full py-3 rounded button-purple">Восстановление</button>
+        <button class="w-full py-3 rounded button-purple" onclick="changeEmail()">Сменить Email</button>
+        <button class="w-full py-3 rounded button-purple" onclick="changePassword()">Сменить пароль</button>
+        <button class="w-full py-3 rounded button-purple" onclick="resetPassword()">Восстановление</button>
       </div>
     </div>
+
   </div>
 
   <div class="text-center text-xs text-gray-400 mt-10">
@@ -114,122 +61,73 @@
   </div>
 </main>
 
-<!-- Firebase + Скрипты -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyBhmuX9aWec4NjxiSZ1FmqBr7LvioyK1rk",
-    authDomain: "librexchat-dba06.firebaseapp.com",
-    projectId: "librexchat-dba06",
-    storageBucket: "librexchat-dba06.appspot.com",
-    messagingSenderId: "48021503169",
-    appId: "1:48021503169:web:fb694c3b1e3416461ae840"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
+const firebaseConfig = { /* твой конфиг */ };
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      document.getElementById('email').textContent = user.email;
-      document.getElementById('registration').textContent = user.metadata.creationTime.split('T')[0];
-    } else {
-      location.href = 'login.html';
-    }
-  });
-
+function showInfo(message, error = false) {
   const infoBox = document.getElementById('infoBox');
+  infoBox.textContent = message;
+  infoBox.style.background = error ? 'rgba(255, 0, 0, 0.8)' : 'rgba(0, 128, 0, 0.8)';
+  infoBox.style.opacity = 1;
+  setTimeout(() => { infoBox.style.opacity = 0; }, 4000);
+}
 
-  function showNotification(message, color = "#00f0ff") {
-    infoBox.style.backgroundColor = color;
-    infoBox.textContent = message;
-    infoBox.style.opacity = "1";
-    setTimeout(() => {
-      infoBox.style.opacity = "0";
-    }, 3000);
+auth.onAuthStateChanged(user => {
+  if (user) {
+    document.getElementById('email').textContent = user.email;
+    document.getElementById('registration').textContent = user.metadata.creationTime.split('T')[0];
+  } else {
+    location.href = 'login.html';
   }
+});
 
-  document.getElementById('changeEmailBtn').addEventListener('click', async () => {
-    const newEmail = prompt('Введите новый Email:');
-    if (newEmail) {
-      try {
-        await auth.currentUser.updateEmail(newEmail);
-        await auth.currentUser.sendEmailVerification();
-        showNotification('Email изменён! Проверьте новый Email.', '#00ff9d');
-        document.getElementById('email').textContent = newEmail;
-      } catch (error) {
-        showNotification('Ошибка: ' + error.message, '#e53935');
-      }
-    }
-  });
-
-  document.getElementById('changePasswordBtn').addEventListener('click', async () => {
-    const newPassword = prompt('Введите новый пароль:');
-    if (newPassword) {
-      try {
-        await auth.currentUser.updatePassword(newPassword);
-        showNotification('Пароль изменён!', '#00ff9d');
-      } catch (error) {
-        showNotification('Ошибка: ' + error.message, '#e53935');
-      }
-    }
-  });
-
-  document.getElementById('recoveryBtn').addEventListener('click', async () => {
-    try {
-      const email = auth.currentUser.email;
-      await auth.sendPasswordResetEmail(email);
-      showNotification('Письмо для восстановления отправлено!', '#00ff9d');
-    } catch (error) {
-      showNotification('Ошибка: ' + error.message, '#e53935');
-    }
-  });
-
-  let currentLang = localStorage.getItem('lang') || 'ru';
-
-  function switchLanguage() {
-    currentLang = currentLang === 'ru' ? 'en' : 'ru';
-    localStorage.setItem('lang', currentLang);
-    applyTranslations();
+function changeEmail() {
+  const newEmail = prompt('Введите новый Email:');
+  if (newEmail) {
+    auth.currentUser.verifyBeforeUpdateEmail(newEmail)
+      .then(() => showInfo('Письмо отправлено на новый email для подтверждения.'))
+      .catch(error => showInfo('Ошибка: ' + error.message, true));
   }
+}
 
-  function applyTranslations() {
-    const texts = {
-      ru: {
-        profile: 'Мой профиль',
-        data: 'Данные профиля',
-        chars: 'Персонажи',
-        upload: 'Мой центр загрузок',
-        faction: 'Фракция',
-        delete: 'Удаление профиля',
-        changeEmail: 'Сменить Email',
-        changePassword: 'Сменить пароль',
-        restore: 'Восстановление'
-      },
-      en: {
-        profile: 'My Profile',
-        data: 'Profile Data',
-        chars: 'Characters',
-        upload: 'My Upload Center',
-        faction: 'Faction',
-        delete: 'Delete Profile',
-        changeEmail: 'Change Email',
-        changePassword: 'Change Password',
-        restore: 'Recovery'
-      }
-    };
-    const t = texts[currentLang];
+function changePassword() {
+  const email = auth.currentUser.email;
+  auth.sendPasswordResetEmail(email)
+    .then(() => showInfo('Письмо для смены пароля отправлено.'))
+    .catch(error => showInfo('Ошибка: ' + error.message, true));
+}
 
-    document.getElementById('profileTitle').textContent = t.profile;
-    document.getElementById('profileDataBtn').textContent = t.data;
-    document.getElementById('profileCharsBtn').textContent = t.chars;
-    document.getElementById('profileUploadBtn').textContent = t.upload;
-    document.getElementById('changeEmailBtn').textContent = t.changeEmail;
-    document.getElementById('changePasswordBtn').textContent = t.changePassword;
-    document.getElementById('recoveryBtn').textContent = t.restore;
-  }
+function resetPassword() {
+  changePassword();
+}
 
+let currentLang = localStorage.getItem('lang') || 'ru';
+function switchLanguage() {
+  currentLang = currentLang === 'ru' ? 'en' : 'ru';
+  localStorage.setItem('lang', currentLang);
   applyTranslations();
+}
+
+function applyTranslations() {
+  const texts = {
+    ru: { profile: 'Мой профиль', email: 'Email:', balance: 'Счёт:', characters: 'Количество персонажей:', registration: 'Дата регистрации:', playtime: 'Время в игре:' },
+    en: { profile: 'My Profile', email: 'Email:', balance: 'Balance:', characters: 'Characters:', registration: 'Registration Date:', playtime: 'Playtime:' }
+  };
+
+  const t = texts[currentLang];
+  document.getElementById('profile-title').textContent = t.profile;
+  document.getElementById('label-email').textContent = t.email;
+  document.getElementById('label-balance').textContent = t.balance;
+  document.getElementById('label-characters').textContent = t.characters;
+  document.getElementById('label-registration').textContent = t.registration;
+  document.getElementById('label-playtime').textContent = t.playtime;
+}
+
+applyTranslations();
 </script>
 
 </body>
