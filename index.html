@@ -24,6 +24,18 @@
       bottom: 10px;
       left: 15px;
     }
+    .rainbow-text {
+      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);
+      background-size: 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbow 6s linear infinite;
+      font-weight: bold;
+    }
+    @keyframes rainbow {
+      0% { background-position: 0% }
+      100% { background-position: 400% }
+    }
   </style>
 </head>
 <body>
@@ -65,6 +77,7 @@
     <button onclick="switchLanguage()" class="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600">EN / RU</button>
   </div>
 
+  <!-- Скрипт перенесен вниз страницы -->
   <script>
     const translations = {
       ru: {
@@ -123,10 +136,10 @@
       });
     }
 
-    window.onload = () => {
-      switchLanguage(); // переключает
-      switchLanguage(); // возвращает на ru
-    };
+    window.addEventListener('load', () => {
+      switchLanguage(); // При полной загрузке страницы
+    });
   </script>
+
 </body>
 </html>
